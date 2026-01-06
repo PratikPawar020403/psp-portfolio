@@ -1,0 +1,234 @@
+/* Pearl Background Section */
+.skills-section {
+  position: relative;
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(80px, 12vh, 160px);
+  padding: clamp(60px, 10vh, 100px) 0;
+  overflow: hidden;
+  
+  /* Pearl gradient background */
+  background: linear-gradient(
+    135deg,
+    #f9f9fa 0%,
+    #f4f4f5 25%,
+    #f8f9fb 50%,
+    #f4f4f5 75%,
+    #eae9f0 100%
+  );
+}
+
+/* Logo Row Container */
+.logo-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: clamp(30px, 5vh, 50px);
+  width: 100%;
+}
+
+/* Headings */
+.row-heading {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  font-weight: 700;
+  text-align: center;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  text-transform: lowercase;
+  z-index: 10;
+}
+
+.row-heading-creator {
+  background: linear-gradient(135deg, #F97316 0%, #EA580C 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.row-heading-builder {
+  background: linear-gradient(135deg, #0EA5E9 0%, #6366F1 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Logo Track - Horizontal Scroll Container */
+.logo-track {
+  width: 100%;
+  overflow: hidden;
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 10%,
+    black 90%,
+    transparent 100%
+  );
+}
+
+/* Wrapper for animation */
+.logo-set-wrapper {
+  display: flex;
+  width: fit-content;
+}
+
+/* Logo Set */
+.logo-set {
+  display: flex;
+  align-items: center;
+  gap: clamp(40px, 6vw, 80px);
+  padding: 0 clamp(20px, 3vw, 40px);
+}
+
+/* Animation: Left to Right (Creator) */
+.track-left-to-right .logo-set-wrapper {
+  animation: scroll-left-to-right 28s linear infinite;
+}
+
+/* Animation: Right to Left (Builder) */
+.track-right-to-left .logo-set-wrapper {
+  animation: scroll-right-to-left 28s linear infinite;
+}
+
+/* Keyframes */
+@keyframes scroll-left-to-right {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+@keyframes scroll-right-to-left {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+/* Pause on hover */
+.logo-track:hover .logo-set-wrapper {
+  animation-play-state: paused;
+}
+
+/* Logo Styling */
+.orbit-logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: clamp(50px, 8vw, 80px);
+  height: clamp(50px, 8vw, 80px);
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.orbit-logo img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 10px rgba(0, 0, 0, 0.08));
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Hover Effects */
+.orbit-logo:hover {
+  transform: scale(1.15);
+  z-index: 20;
+}
+
+.orbit-logo:hover img {
+  filter: drop-shadow(0 6px 20px rgba(0, 0, 0, 0.15));
+}
+
+/* Reduced motion support */
+@media (prefers-reduced-motion: reduce) {
+  .logo-set-wrapper {
+    animation: none !important;
+  }
+  
+  .orbit-logo {
+    transition: none;
+  }
+  
+  .orbit-logo img {
+    transition: none;
+  }
+}
+
+/* Mobile optimizations */
+@media (max-width: 767px) {
+  .skills-section {
+    min-height: auto;
+    padding: 60px 0;
+    gap: 60px;
+  }
+  
+  .logo-row {
+    gap: 25px;
+  }
+  
+  .row-heading {
+    font-size: 2rem;
+  }
+  
+  .logo-set {
+    gap: 30px;
+    padding: 0 15px;
+  }
+  
+  .orbit-logo {
+    width: 50px;
+    height: 50px;
+  }
+  
+  /* Slower animation on mobile */
+  .track-left-to-right .logo-set-wrapper,
+  .track-right-to-left .logo-set-wrapper {
+    animation-duration: 35s;
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .skills-section {
+    gap: 100px;
+  }
+  
+  .logo-row {
+    gap: 35px;
+  }
+  
+  .row-heading {
+    font-size: 3rem;
+  }
+  
+  .logo-set {
+    gap: 50px;
+  }
+  
+  .orbit-logo {
+    width: 60px;
+    height: 60px;
+  }
+}
+
+/* Large desktop */
+@media (min-width: 1400px) {
+  .logo-set {
+    gap: 100px;
+  }
+}

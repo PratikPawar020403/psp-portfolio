@@ -1,0 +1,230 @@
+/* DEEP FOCUS - Editorial, Typography-First */
+:root {
+  --mono-initial: #4B5056;
+  /* Muted Graphite */
+  --mono-hover: #F3F4F6;
+  /* Paper White */
+  --mono-glow-1: rgba(209, 213, 219, 0.45);
+  /* Inner Diffused White */
+  --mono-glow-2: rgba(209, 213, 219, 0.18);
+  /* Outer Soft Aura */
+}
+
+.focus-container {
+  position: relative;
+  display: flex;
+  gap: 0.5em;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.focus-word {
+  position: relative;
+  font-size: 10rem;
+  font-weight: 900;
+  cursor: pointer;
+
+  /* INITIAL STATE - Muted Graphite, editorial shadow */
+  background: linear-gradient(135deg, #5b6066, var(--mono-initial), #3b4046);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  opacity: 0.72;
+
+  /* CUBIC BEZIER: "Weighted & expensive" - starts quick, settles gracefully */
+  transition: all 0.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.focus-word:hover {
+  /* HOVER STATE - Paper White, magazine title reveal */
+  background: linear-gradient(135deg, #ffffff, var(--mono-hover), #e3e4e6);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  opacity: 1;
+  filter: blur(0px);
+
+  /* Soft Diffused Glow */
+  text-shadow:
+    0 0 12px var(--mono-glow-1),
+    0 0 28px var(--mono-glow-2);
+}
+
+.focus-word.active {
+  /* ACTIVE STATE - Paper White, magazine title reveal */
+  filter: blur(0);
+  background: linear-gradient(135deg, #ffffff, var(--mono-hover), #e3e4e6);
+  background-clip: text;
+  -webkit-background-clip: text;
+  color: transparent;
+  opacity: 1;
+
+  /* Soft Diffused Glow */
+  text-shadow:
+    0 0 12px var(--mono-glow-1),
+    0 0 28px var(--mono-glow-2);
+}
+
+.focus-frame {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  box-sizing: content-box;
+  border: none;
+}
+
+.corner {
+  position: absolute;
+  width: 2rem;
+  height: 2rem;
+  border: 5px solid var(--border-color, #6B4BFF);
+  filter: drop-shadow(0px 0px 12px var(--glow-color, rgba(107, 75, 255, 0.6)));
+  border-radius: 4px;
+  transition: none;
+}
+
+.top-left {
+  top: -12px;
+  left: -12px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.top-right {
+  top: -12px;
+  right: -12px;
+  border-left: none;
+  border-bottom: none;
+}
+
+.bottom-left {
+  bottom: -12px;
+  left: -12px;
+  border-right: none;
+  border-top: none;
+}
+
+.bottom-right {
+  bottom: -12px;
+  right: -12px;
+  border-left: none;
+  border-top: none;
+}
+
+/* Responsive adjustments */
+@media (max-width: 640px) {
+  .focus-word {
+    font-size: 5rem;
+  }
+
+  .corner {
+    width: 1rem;
+    height: 1rem;
+    border-width: 3px;
+  }
+
+  .top-left,
+  .top-right {
+    top: -8px;
+  }
+
+  .bottom-left,
+  .bottom-right {
+    bottom: -8px;
+  }
+
+  .top-left,
+  .bottom-left {
+    left: -8px;
+  }
+
+  .top-right,
+  .bottom-right {
+    right: -8px;
+  }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+  .focus-word {
+    font-size: 7.5rem;
+  }
+
+  .corner {
+    width: 1.5rem;
+    height: 1.5rem;
+    border-width: 4px;
+  }
+
+  .top-left,
+  .top-right {
+    top: -10px;
+  }
+
+  .bottom-left,
+  .bottom-right {
+    bottom: -10px;
+  }
+
+  .top-left,
+  .bottom-left {
+    left: -10px;
+  }
+
+  .top-right,
+  .bottom-right {
+    right: -10px;
+  }
+}
+
+@media (min-width: 1025px) and (max-width: 1199px) {
+  .focus-word {
+    font-size: 10rem;
+  }
+}
+
+@media (min-width: 1200px) {
+  .focus-word {
+    font-size: 12.5rem;
+  }
+}
+
+/* Mini Version for Footer Links */
+.focus-container.true-focus-mini {
+  gap: 0;
+}
+
+.focus-container.true-focus-mini .focus-word {
+  font-size: 1.25rem !important;
+  /* text-xl */
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.focus-container.true-focus-mini .corner {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-width: 1.5px;
+  filter: drop-shadow(0px 0px 4px var(--glow-color));
+}
+
+.focus-container.true-focus-mini .top-left,
+.focus-container.true-focus-mini .top-right {
+  top: -4px;
+}
+
+.focus-container.true-focus-mini .bottom-left,
+.focus-container.true-focus-mini .bottom-right {
+  bottom: -4px;
+}
+
+.focus-container.true-focus-mini .top-left,
+.focus-container.true-focus-mini .bottom-left {
+  left: -4px;
+}
+
+.focus-container.true-focus-mini .top-right,
+.focus-container.true-focus-mini .bottom-right {
+  right: -4px;
+}

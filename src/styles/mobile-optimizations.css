@@ -1,0 +1,175 @@
+/* Enhanced Mobile Optimizations Following Guidelines */
+
+/* Touch-friendly improvements */
+@media (max-width: 768px) {
+  /* Ensure minimum touch targets of 48x48px */
+  button, 
+  [role="button"],
+  a,
+  input[type="checkbox"],
+  input[type="radio"],
+  select {
+    min-height: 48px;
+    min-width: 48px;
+    padding: 12px 16px;
+    border-radius: 8px;
+  }
+  
+  
+  /* Prevent iOS zoom on input focus */
+  input,
+  select,
+  textarea {
+    font-size: 16px !important;
+    border-radius: 8px;
+  }
+
+  /* Optimize horizontal scrolling */
+  .h-scroll-container,
+  .tooltip-scroll-wrapper {
+    scroll-snap-type: x proximity;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    overscroll-behavior-x: contain;
+  }
+  
+  .h-scroll-container::-webkit-scrollbar,
+  .tooltip-scroll-wrapper::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Clean section spacing */
+  .clean-section {
+    padding: 2rem 1rem;
+  }
+  
+  .clean-card {
+    padding: 1.5rem;
+    margin: 0 auto;
+    border-radius: 12px;
+    
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* Certificate carousel mobile optimization */
+  [aria-roledescription="carousel"] {
+    margin: 0 -1rem;
+    padding: 0 1rem;
+  }
+  
+  /* Reduce excessive spacing between sections */
+  .snap-section + .snap-section {
+    margin-top: -15vh;
+  }
+  
+  /* Optimize tooltip positioning */
+  [data-radix-popper-content-wrapper] {
+    max-width: 90vw !important;
+    margin: 0 5vw;
+    z-index: 9999 !important;
+  }
+  
+  /* Section padding optimization */
+  #web1, #web2, #skills, #projects, #skillpowerups {
+    padding: 2rem 1rem;
+  }
+  
+  /* Timeline spacing */
+  .timeline-wrapper {
+    margin-bottom: 1rem;
+  }
+  
+  /* Container responsive padding */
+  .container {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* Touch Device Behavior - No hover, use tap */
+@media (hover: none) and (pointer: coarse) {
+  /* Remove hover effects, use active/focus instead */
+  .hover\:scale-105:active,
+  .hover\:scale-105:focus {
+    transform: scale(1.02);
+    transition: transform 0.1s ease;
+  }
+  
+  .hover\:opacity-90:active,
+  .hover\:opacity-90:focus {
+    opacity: 0.9;
+  }
+  
+  /* Show interactive content immediately on touch devices */
+  .group-hover\:opacity-100,
+  .group-hover\:translate-y-0 {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+  }
+  
+  /* Make animations visible by default on touch */
+  [data-animate="true"] {
+    opacity: 1 !important;
+    transform: translateY(0) !important;
+    transition: none !important;
+  }
+  
+  /* Better tooltip behavior on touch */
+  [data-radix-tooltip-trigger]:active + [data-radix-popper-content-wrapper] {
+    opacity: 1 !important;
+    visibility: visible !important;
+  }
+}
+
+/* Tablet optimizations */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+  
+  .clean-section {
+    padding: 3rem 2rem;
+  }
+  
+  .clean-card {
+    padding: 2rem;
+  }
+}
+
+/* Desktop optimizations */
+@media (min-width: 1025px) {
+  .container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+  
+  .clean-section {
+    padding: 4rem 2rem;
+  }
+  
+  .clean-card {
+    padding: 2.5rem;
+  }
+  
+  /* Enhanced hover effects for desktop */
+  .hover\:scale-105:hover {
+    transform: scale(1.05);
+    transition: all 0.3s cubic-bezier(0.2, 0.9, 0.3, 1);
+  }
+}
+
+/* Fix pagination on mobile */
+@media (max-width: 640px) {
+  .pagination-content {
+    gap: 0.25rem;
+  }
+  
+  .pagination-link {
+    min-width: 48px;
+    min-height: 48px;
+    font-size: 0.875rem;
+  }
+}
+
