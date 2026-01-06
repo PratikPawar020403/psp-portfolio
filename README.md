@@ -70,7 +70,3 @@ This project is configured for **Netlify**.
     - **Command**: `npm run build`
     - **Publish directory**: `dist`
 3.  Add your **Environment Variables** in Netlify Site Settings.
-
-## 🤝 Contributing
-
-Contributions are welcome! Please open an issue or submit a pull request for any improvements.
