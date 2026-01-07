@@ -1,9 +1,8 @@
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { ProjectFilters } from './ProjectFilters';
 import { ProjectGrid } from './ProjectGrid';
-import { fetchProjects } from '@/utils/supabaseData';
-import { Project } from '@/types/project';
+import { projects } from '@/data/projects';
 import { toast } from 'sonner';
 import { Button } from '../ui/button';
 import { motion } from 'framer-motion';
@@ -11,30 +10,11 @@ import { motion } from 'framer-motion';
 const ProjectsSection = () => {
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [expandedProject, setExpandedProject] = useState<number | null>(null);
-    const [projectsList, setProjectsList] = useState<Project[]>([]);
-    const [loading, setLoading] = useState(true);
     const [showAll, setShowAll] = useState(false);
     const categories = ["All", "Deep Learning", "Machine Learning", "Web Development", "Cybersecurity"];
 
-    useEffect(() => {
-        const loadProjects = async () => {
-            try {
-                setLoading(true);
-                const projects = await fetchProjects();
-                setProjectsList(projects);
-            } catch (error) {
-                console.error("Error loading projects:", error);
-                toast.error("Failed to load projects");
-            } finally {
-                setLoading(false);
-            }
-        };
-
-        loadProjects();
-    }, []);
-
     // Filter projects based on selected category
-    const filteredProjects = projectsList.filter(project =>
+    const filteredProjects = projects.filter(project =>
         selectedCategory === "All" || project.category === selectedCategory
     );
 
@@ -75,36 +55,25 @@ const ProjectsSection = () => {
                     />
                 </div>
 
-                {loading ? (
-                    <div className="text-center py-12">
-                        <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent text-cyan-300 motion-reduce:animate-[spin_1.5s_linear_infinite]" role="status">
-                            <span className="sr-only">Loading...</span>
-                        </div>
-                        <p className="mt-4 text-white">Loading projects...</p>
-                    </div>
-                ) : (
-                    <>
-                        <ProjectGrid
-                            projects={displayedProjects}
-                            expandedProject={expandedProject}
-                            onProjectClick={handleProjectClick}
-                        />
+                <ProjectGrid
+                    projects={displayedProjects}
+                    expandedProject={expandedProject}
+                    onProjectClick={handleProjectClick}
+                />
 
-                        {shouldShowViewMore && (
-                            <motion.div
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                className="flex justify-center mt-8"
-                            >
-                                <Button
-                                    onClick={() => setShowAll(true)}
-                                    className="bg-gradient-to-r from-[#1EAEDB] to-[#33C3F0] text-white text-lg px-8 py-6 h-auto hover:opacity-90 transition-all"
-                                >
-                                    View More Projects
-                                </Button>
-                            </motion.div>
-                        )}
-                    </>
+                {shouldShowViewMore && (
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="flex justify-center mt-8"
+                    >
+                        <Button
+                            onClick={() => setShowAll(true)}
+                            className="bg-gradient-to-r from-[#1EAEDB] to-[#33C3F0] text-white text-lg px-8 py-6 h-auto hover:opacity-90 transition-all"
+                        >
+                            View More Projects
+                        </Button>
+                    </motion.div>
                 )}
             </div>
         </div>
