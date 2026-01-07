@@ -1,20 +1,33 @@
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { ProjectFilters } from './ProjectFilters';
 import { ProjectGrid } from './ProjectGrid';
 import { projects } from '@/data/projects';
+import { fetchProjects } from '@/utils/supabaseData';
 import { toast } from 'sonner';
 import { Button } from '../ui/button';
 import { motion } from 'framer-motion';
 
 const ProjectsSection = () => {
+    const [projectsData, setProjectsData] = useState(projects);
+
+    useEffect(() => {
+        const loadProjects = async () => {
+            const fetchedData = await fetchProjects();
+            if (fetchedData && fetchedData.length > 0) {
+                console.log("Supabase projects loaded:", fetchedData.length);
+                setProjectsData(fetchedData);
+            }
+        };
+        loadProjects();
+    }, []);
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [expandedProject, setExpandedProject] = useState<number | null>(null);
     const [showAll, setShowAll] = useState(false);
     const categories = ["All", "Deep Learning", "Machine Learning", "Web Development", "Cybersecurity"];
 
     // Filter projects based on selected category
-    const filteredProjects = projects.filter(project =>
+    const filteredProjects = projectsData.filter(project =>
         selectedCategory === "All" || project.category === selectedCategory
     );
 

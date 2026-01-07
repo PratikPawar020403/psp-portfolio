@@ -42,7 +42,7 @@ export async function fetchProjects(): Promise<Project[]> {
     title: project.title,
     description: project.description,
     category: project.category,
-    image: normalizeUrl(project.image_url) || '', // Map image_url to image with optimization
+    image: normalizeUrl(project.image_url) || '/placeholder.png', // Map image_url to image with optimization
     githubUrl: normalizeUrl(project.github_url),
     demoUrl: normalizeUrl(project.demo_url),
     details: project.details || '',

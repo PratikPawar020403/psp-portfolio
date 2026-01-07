@@ -34,8 +34,11 @@ const NotebookSection = () => {
         <section
             ref={sectionRef}
             id="academic-notebook-section"
-            className="w-full flex justify-center my-20 snap-section"
+            className="w-full flex flex-col items-center my-20 snap-section"
         >
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-8 tracking-wider uppercase">
+                It's a Flipbook
+            </h2>
             {shouldLoad ? (
                 <iframe
                     src="https://academic-notebook.netlify.app/"
