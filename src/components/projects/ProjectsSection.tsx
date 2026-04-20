@@ -24,7 +24,7 @@ const ProjectsSection = () => {
     const [selectedCategory, setSelectedCategory] = useState("All");
     const [expandedProject, setExpandedProject] = useState<number | null>(null);
     const [showAll, setShowAll] = useState(false);
-    const categories = ["All", "Deep Learning", "Machine Learning", "Web Development", "Cybersecurity"];
+    const categories = ["All", "Industry Experience ", "Machine Learning", "Web Development", "Cybersecurity" , "Applied AI"];
 
     // Filter projects based on selected category
     const filteredProjects = projectsData.filter(project =>
