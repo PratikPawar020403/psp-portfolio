@@ -1,7 +1,7 @@
 import { Project } from "@/types/project";
 
 export const projects: Project[] = [
-    // Deep Learning
+    // Applied Ai
     {
         id: 1,
         title: "Legal-Sakha",
@@ -151,5 +151,30 @@ export const projects: Project[] = [
         githubUrl: "",
         demoUrl: "",
         size: "small"
+    },
+    {
+        id: 13,
+        title: "GenAi Intern at DoorDecor",
+        category: "Industry Experience",
+        description: "Did an internship at DoorDecor. ",
+        details: "Worked on real-world AI automation, SEO optimization, and business solution development.",
+        image: "/placeholder.png",
+        techStack: ["n8n","AI APIs","Google Search Console","WordPress","SEO","Automation Workflows"],
+        githubUrl: "",
+        demoUrl: "",
+        size: "large"
+    },
+    {
+        id: 14,
+        title: "Automation-Workflows",
+        category: "Applied Ai",
+        description: "A collection of practical AI workflows built to solve real-world tasks using automation.",
+        details: "Ai automations for daily uses . ",
+        image: "/placeholder.png",
+        techStack: ["n8n","AI APIs","Docker","Workflows"],
+        githubUrl: "",
+        demoUrl: "",
+        size: "small"
     }
 ];
+
