@@ -157,7 +157,7 @@ export const projects: Project[] = [
         title: "GenAi Intern at DoorDecor",
         category: "Industry Experience",
         description: "Did an internship at DoorDecor. ",
-        details: "Worked on real-world AI automation, SEO optimization, and business solution development.",
+        details: "Key Responsibilities: • Built AI-powered automation workflows • Integrated Google Analytics & Search Console • Developed AI content agents • Worked on automation planning & feasibility • Managed WordPress systems Learnings: • Applied AI in real business use cases • SEO & analytics integration • Scalable workflow design • Real-world development experience",
         image: "/placeholder.png",
         techStack: ["n8n","AI APIs","Google Search Console","WordPress","SEO","Automation Workflows"],
         githubUrl: "",
