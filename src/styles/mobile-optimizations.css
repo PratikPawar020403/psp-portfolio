@@ -24,8 +24,7 @@
     border-radius: 8px;
   }
 
-  /* Optimize horizontal scrolling */
-  .h-scroll-container,
+  /* Optimize horizontal scrolling for tooltips */
   .tooltip-scroll-wrapper {
     scroll-snap-type: x proximity;
     -webkit-overflow-scrolling: touch;
@@ -33,7 +32,6 @@
     overscroll-behavior-x: contain;
   }
   
-  .h-scroll-container::-webkit-scrollbar,
   .tooltip-scroll-wrapper::-webkit-scrollbar {
     display: none;
   }
@@ -71,19 +69,13 @@
   }
   
   /* Section padding optimization */
-  #web1, #web2, #skills, #projects, #skillpowerups {
+  #web1, #notebook, #skills, #projects, #skillpowerups {
     padding: 2rem 1rem;
   }
   
   /* Timeline spacing */
   .timeline-wrapper {
     margin-bottom: 1rem;
-  }
-  
-  /* Container responsive padding */
-  .container {
-    padding-left: 16px;
-    padding-right: 16px;
   }
 }
 
@@ -124,11 +116,6 @@
 
 /* Tablet optimizations */
 @media (min-width: 769px) and (max-width: 1024px) {
-  .container {
-    padding-left: 2rem;
-    padding-right: 2rem;
-  }
-  
   .clean-section {
     padding: 3rem 2rem;
   }
@@ -140,11 +127,6 @@
 
 /* Desktop optimizations */
 @media (min-width: 1025px) {
-  .container {
-    padding-left: 2rem;
-    padding-right: 2rem;
-  }
-  
   .clean-section {
     padding: 4rem 2rem;
   }

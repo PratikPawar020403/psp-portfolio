@@ -37,9 +37,6 @@ const SkillPowerUpsSection = () => {
       viewport={{ once: true, margin: "-100px" }}
       variants={sectionVariants}
     >
-      {/* Background Effects */}
-      <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
-
       <div className="container mx-auto max-w-[1920px] px-4 relative z-10">
         <CertificateHeader />
 

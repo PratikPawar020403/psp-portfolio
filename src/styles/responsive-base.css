@@ -23,14 +23,6 @@ body {
   background: #fff;
 }
 
-/* 2. Container System */
-.container {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 16px;
-}
-
 /* 3. Touch Targets - Minimum 48x48px */
 button,
 [role="button"],
@@ -154,10 +146,6 @@ p {
 
 /* 9. Mobile Breakpoints */
 @media (max-width: 480px) {
-  .container {
-    padding: 12px;
-  }
-  
   h1 { font-size: 1.75rem; }
   h2 { font-size: 1.5rem; }
   h3 { font-size: 1.25rem; }
@@ -168,24 +156,8 @@ p {
 }
 
 @media (min-width: 481px) and (max-width: 768px) {
-  .container {
-    padding: 20px;
-  }
-  
   .grid-auto-fit {
     grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  }
-}
-
-@media (min-width: 769px) and (max-width: 1024px) {
-  .container {
-    padding: 24px;
-  }
-}
-
-@media (min-width: 1025px) {
-  .container {
-    padding: 32px;
   }
 }
 
@@ -204,17 +176,7 @@ p {
   border: 1px solid rgba(0, 0, 0, 0.05);
 }
 
-/* 11. Focus States for Accessibility */
-*:focus {
-  outline: 2px solid #007bff;
-  outline-offset: 2px;
-}
-
-*:focus:not(:focus-visible) {
-  outline: none;
-}
-
-/* 12. Performance Optimizations */
+/* 11. Performance Optimizations */
 .will-change-transform {
   will-change: transform;
 }

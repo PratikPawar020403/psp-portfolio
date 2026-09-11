@@ -53,15 +53,3 @@
   color: black;
   font-weight: bold;
 }
-
-/* Focus outlines for keyboard navigation */
-:focus {
-  outline: 2px solid #6B4BFF;
-  outline-offset: 2px;
-}
-
-@media (hover: hover) {
-  :focus:not(:focus-visible) {
-    outline: none;
-  }
-}
