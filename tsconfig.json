@@ -7,7 +7,9 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@designcodeio/threeui": ["./src/shaders/3d-paper/ThreeDPaper.tsx"],
+      "@designcodeio/threeui/*": ["./src/shaders/*"]
     },
     "noImplicitAny": false,
     "noUnusedParameters": false,

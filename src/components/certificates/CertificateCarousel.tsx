@@ -11,14 +11,33 @@ interface CertificateCarouselProps {
   certificates: Certificate[];
 }
 
+const defaultCertificates: Certificate[] = [
+  {
+    id: 1,
+    title: 'Viksit Vibrant Village Quiz',
+    issuer: 'Ministry of Youth Affairs & Sports',
+    date: '2026',
+    color: 'from-blue-600 to-indigo-600',
+    image: '/psp-uploads/viksit-bharat-quiz.png'
+  },
+  { id: 2, title: 'Generative AI Mastermind', issuer: 'Outskill', date: '2024', color: 'from-blue-500 to-cyan-500', image: '/psp-uploads/008decb4-a10b-4a52-9df3-7329f72406dd.png' },
+  { id: 3, title: 'Deep Learning Specialization', issuer: 'DeepLearning.AI', date: '2024', color: 'from-purple-500 to-indigo-500', image: '/psp-uploads/21f29b71-eb78-4c51-90a0-a9dcdffabd4b.png' },
+  { id: 4, title: 'Machine Learning Professional', issuer: 'Stanford Online', date: '2023', color: 'from-emerald-500 to-teal-500', image: '/psp-uploads/22b7317c-1f47-4ea2-a84b-048bcd7a95d8.png' },
+  { id: 5, title: 'AWS Cloud Solutions', issuer: 'Amazon Web Services', date: '2023', color: 'from-amber-500 to-orange-500', image: '/psp-uploads/24899f44-4123-4fca-aa7f-800ec8cfd731.png' },
+];
+
 export const CertificateCarousel: React.FC<CertificateCarouselProps> = React.memo(({
   certificates
 }) => {
   const isMobile = useIsMobile();
   const [isPaused, setIsPaused] = useState(false);
 
-  // Calculate how many certificates to show for visual balance
-  const certificateCount = certificates.length;
+  // Use provided certificates, or default certificates if database is empty/offline
+  const rawCertificates = certificates && certificates.length > 0 ? certificates : defaultCertificates;
+  const displayCertificates = rawCertificates.some(c => c.image?.includes('viksit-bharat-quiz'))
+    ? rawCertificates
+    : [defaultCertificates[0], ...rawCertificates];
+  const certificateCount = displayCertificates.length;
 
   // Handle pause on hover
   const handleMouseEnter = React.useCallback(() => {
@@ -65,7 +84,7 @@ export const CertificateCarousel: React.FC<CertificateCarouselProps> = React.mem
           )}
         >
           {/* Original certificates */}
-          {certificates.map((certificate, index) => (
+          {displayCertificates.map((certificate, index) => (
             <CarouselSlide
               key={`original-${certificate.id}`}
               certificate={certificate}
@@ -74,7 +93,7 @@ export const CertificateCarousel: React.FC<CertificateCarouselProps> = React.mem
           ))}
 
           {/* Duplicated certificates for infinite scrolling */}
-          {certificates.map((certificate, index) => (
+          {displayCertificates.map((certificate, index) => (
             <CarouselSlide
               key={`duplicate-${certificate.id}`}
               certificate={certificate}

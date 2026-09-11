@@ -11,15 +11,14 @@ function normalizeUrl(url: string | null | undefined): string | undefined {
   let trimmedUrl = url.trim();
   if (!trimmedUrl) return undefined;
 
+  // Preserve local root-relative paths like /psp-uploads/...
+  if (trimmedUrl.startsWith('/')) {
+    return trimmedUrl;
+  }
+
   // If URL doesn't start with http:// or https://, add https://
   if (!trimmedUrl.startsWith('http://') && !trimmedUrl.startsWith('https://')) {
     trimmedUrl = `https://${trimmedUrl}`;
-  }
-
-  // Optimize Supabase Storage Public URLs
-  // We append transformation parameters for public bucket images
-  if (trimmedUrl.includes('supabase.co/storage/v1/object/public') && !trimmedUrl.includes('?')) {
-    return `${trimmedUrl}?width=800&quality=80&format=webp`;
   }
 
   return trimmedUrl;
@@ -69,7 +68,7 @@ export async function fetchCertificates(): Promise<Certificate[]> {
   return data.map(cert => ({
     id: parseInt(cert.id.slice(0, 8), 16), // Convert UUID to number for compatibility
     title: cert.title,
-    image: cert.image_url,
+    image: normalizeUrl(cert.image_url),
     issuer: cert.issuer,
     date: cert.date,
     color: cert.color

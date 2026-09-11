@@ -13,6 +13,8 @@ export default defineConfig(({ mode }) => ({
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
+      "@designcodeio/threeui/style.css": path.resolve(__dirname, "./src/shaders/threeui.css"),
+      "@designcodeio/threeui": path.resolve(__dirname, "./src/shaders/3d-paper/ThreeDPaper.tsx"),
     },
   },
   build: {
