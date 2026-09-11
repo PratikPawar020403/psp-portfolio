@@ -32,10 +32,8 @@ export default defineConfig(({ mode }) => ({
           'animation': ['framer-motion'],
           // UI components
           'radix': [
-            '@radix-ui/react-dialog',
             '@radix-ui/react-slot',
             '@radix-ui/react-tooltip',
-            '@radix-ui/react-scroll-area',
           ],
           // Heavy components
           'heavy': ['ogl'],
