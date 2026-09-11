@@ -1,11 +1,8 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 
-import threeDPaperSource from "./sources/3d-paper.html?raw";
 import certificateSource from "./sources/3d-paper-certificate.html?raw";
-import japaneseSource from "./sources/3d-paper-japanese.html?raw";
-import siteOfTheYearSource from "./sources/3d-paper-site-of-the-year.html?raw";
 
-export type ThreeDPaperVariant = "original" | "site-of-the-year" | "japanese" | "certificate";
+export type ThreeDPaperVariant = "certificate" | string;
 
 export type ThreeDPaperProps = {
   className?: string;
@@ -14,21 +11,7 @@ export type ThreeDPaperProps = {
   imageUrl?: string;
 };
 
-const sources: Record<ThreeDPaperVariant, string> = {
-  original: threeDPaperSource,
-  "site-of-the-year": siteOfTheYearSource,
-  japanese: japaneseSource,
-  certificate: certificateSource,
-};
-
-const titles: Record<ThreeDPaperVariant, string> = {
-  original: "3D Paper",
-  "site-of-the-year": "3D Paper — Site of the Year",
-  japanese: "3D Paper — 認定証",
-  certificate: "3D Paper — Certificate",
-};
-
-export function ThreeDPaper({ className = "", style, variant = "original", imageUrl }: ThreeDPaperProps) {
+export function ThreeDPaper({ className = "", style, variant = "certificate", imageUrl }: ThreeDPaperProps) {
   const hostRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [documentVisible, setDocumentVisible] = useState(() => (
@@ -38,12 +21,12 @@ export function ThreeDPaper({ className = "", style, variant = "original", image
   const [ready, setReady] = useState(false);
 
   const srcDoc = useMemo(() => {
-    let source = sources[variant];
+    let source = certificateSource;
     if (imageUrl) {
       source = source.replace('/*CUSTOM_IMAGE_URL*/ ""', `/*CUSTOM_IMAGE_URL*/ ${JSON.stringify(imageUrl)}`);
     }
     return source;
-  }, [variant, imageUrl]);
+  }, [imageUrl]);
 
   useEffect(() => {
     if (ready && iframeRef.current?.contentWindow && imageUrl) {
@@ -95,7 +78,7 @@ export function ThreeDPaper({ className = "", style, variant = "original", image
       {mounted ? (
         <iframe
           ref={iframeRef}
-          title={titles[variant]}
+          title="3D Paper — Certificate"
           srcDoc={srcDoc}
           sandbox="allow-scripts"
           loading="eager"
