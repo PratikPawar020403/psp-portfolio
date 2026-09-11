@@ -95,7 +95,7 @@ const Index = () => {
 
       {/* Skills Section */}
       <ScrollReveal stagger={true}>
-        <section id="skills" aria-label="Skills Overview" role="region" className="snap-section">
+        <section id="skills" aria-label="Skills Overview" role="region" className="snap-section bg-[#F4F3EF]">
           <ErrorBoundary>
             <Suspense fallback={<LoadingFallback />}>
               <SkillsSection />
@@ -106,7 +106,7 @@ const Index = () => {
 
       {/* Projects Section */}
       <ScrollReveal>
-        <section id="projects" aria-label="Project Showcase" role="region" className="snap-section">
+        <section id="projects" aria-label="Project Showcase" role="region" className="snap-section bg-[#101010]">
           <ErrorBoundary>
             <Suspense fallback={<LoadingFallback />}>
               <ProjectsSection />
@@ -117,7 +117,7 @@ const Index = () => {
 
       {/* Skill Power-ups Section */}
       <ScrollReveal>
-        <section id="skillpowerups" aria-label="Skill Certifications" role="region" className="snap-section">
+        <section id="skillpowerups" aria-label="Skill Certifications" role="region" className="snap-section bg-[#161616]">
           <ErrorBoundary>
             <Suspense fallback={<LoadingFallback />}>
               <SkillPowerUpsSection />

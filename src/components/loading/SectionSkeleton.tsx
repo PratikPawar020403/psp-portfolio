@@ -29,7 +29,7 @@ export const SectionSkeleton = ({ type }: SectionSkeletonProps) => {
 
     case 'projects':
       return (
-        <div className="min-h-screen bg-[#0A1A2E] p-8">
+        <div className="min-h-screen bg-[#101010] p-8">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-7xl mx-auto">
             {[1, 2, 3, 4].map((i) => (
               <div key={i} className="h-64 bg-white/5 rounded-xl animate-pulse" />

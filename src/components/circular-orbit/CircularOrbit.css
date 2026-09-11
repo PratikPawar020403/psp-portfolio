@@ -11,15 +11,8 @@
   padding: clamp(60px, 10vh, 100px) 0;
   overflow: hidden;
   
-  /* Pearl gradient background */
-  background: linear-gradient(
-    135deg,
-    #f9f9fa 0%,
-    #f4f4f5 25%,
-    #f8f9fb 50%,
-    #f4f4f5 75%,
-    #eae9f0 100%
-  );
+  /* Section background */
+  background: #F4F3EF;
 }
 
 /* Logo Row Container */

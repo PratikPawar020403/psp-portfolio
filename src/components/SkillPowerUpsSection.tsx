@@ -31,20 +31,14 @@ const SkillPowerUpsSection = () => {
 
   return (
     <motion.section
-      className="min-h-screen relative overflow-hidden bg-gradient-to-br from-[#1a1a1a] via-[#2D1B69] to-[#1a1a1a] py-12 md:py-24 lg:py-32"
+      className="min-h-screen relative overflow-hidden bg-[#161616] py-12 md:py-24 lg:py-32"
       initial="hidden"
       whileInView="visible"
       viewport={{ once: true, margin: "-100px" }}
       variants={sectionVariants}
     >
       {/* Background Effects */}
-      <motion.div
-        className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(107,75,255,0.1)_0%,transparent_65%)]"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1.5 }}
-      />
-      <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-20" />
+      <div className="absolute inset-0 bg-[url('/grid.svg')] opacity-10" />
 
       <div className="container mx-auto max-w-[1920px] px-4 relative z-10">
         <CertificateHeader />

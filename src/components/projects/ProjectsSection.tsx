@@ -46,7 +46,7 @@ const ProjectsSection = () => {
     };
 
     return (
-        <div className="min-h-screen px-4 py-8 md:py-16 bg-gradient-to-b from-[#0A1A2E] via-[#000000] to-[#000000] font-nunito">
+        <div className="min-h-screen px-4 py-8 md:py-16 bg-[#101010] font-nunito">
             <div className="max-w-7xl mx-auto space-y-8 md:space-y-12">
                 <div className="text-center space-y-4 md:space-y-6">
                     <h2 className="text-4xl md:text-5xl lg:text-6xl font-bold text-white">
