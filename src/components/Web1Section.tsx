@@ -22,10 +22,21 @@ const Web1Section = () => {
   const [hasAnimated, setHasAnimated] = useState(false);
   const [showTerminal, setShowTerminal] = useState(false);
 
-  // Defer heavy terminal rendering slightly to prioritize LCP
+  // Defer heavy terminal rendering to idle time to prioritize LCP and avoid Total Blocking Time (TBT)
   useEffect(() => {
-    // Start showing terminal shortly after mount, giving LCP text priority
-    const t = setTimeout(() => setShowTerminal(true), 400);
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+      const handle = (window as unknown as { requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => number }).requestIdleCallback(
+        () => setShowTerminal(true),
+        { timeout: 1500 }
+      );
+      return () => {
+        if ('cancelIdleCallback' in window) {
+          (window as unknown as { cancelIdleCallback: (h: number) => void }).cancelIdleCallback(handle);
+        }
+      };
+    }
+
+    const t = setTimeout(() => setShowTerminal(true), 1200);
     return () => clearTimeout(t);
   }, []);
 

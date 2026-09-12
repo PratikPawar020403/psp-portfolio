@@ -1,0 +1,28 @@
+﻿# Pratik S Pawar - Portfolio
+
+> "Namaste! I'm Pratik S Pawar, a developer passionate about crafting the web with logic and creativity. My only tech stack: my brain."
+
+## About
+Pratik S Pawar is a developer specializing in web development, applied artificial intelligence, machine learning, and cybersecurity. He builds high-performance web applications, data-driven systems, and automation workflows.
+
+## Selected Projects & Work
+- [Legal-Sakha](https://github.com/PratikPawar020403): Deep learning-powered legal assistant utilizing NLP and TensorFlow.
+- [ani-realm](https://github.com/PratikPawar020403): Anime community web platform built with React, TypeScript, and Tailwind CSS.
+- [fitfocus](https://github.com/PratikPawar020403): Personal fitness tracking companion application developed with Next.js, React, and Node.js.
+- [India Population Insights Dashboard](https://github.com/PratikPawar020403): Interactive data visualization dashboard for demographic data using D3.js and React.
+- [GenAi Intern at DoorDecor](https://github.com/PratikPawar020403): Built AI-powered automation workflows, AI content agents, and SEO/analytics integration using n8n and AI APIs.
+- [Automation-Workflows](https://github.com/PratikPawar020403): Collection of practical AI workflows for daily tasks using n8n and Docker.
+- [PotholeSahayak](https://github.com/PratikPawar020403): Computer vision and ML model detecting potholes for road safety using Python and OpenCV.
+- [Lung-Check](https://github.com/PratikPawar020403): Deep learning system for early detection in medical imaging.
+
+## Technical Skills
+- Languages: Python, TypeScript, JavaScript, C++, SQL
+- Frontend: React, Next.js, Tailwind CSS, Vite, Framer Motion
+- Backend & Automation: Node.js, Express, n8n, REST APIs, Supabase, PostgreSQL
+- Machine Learning & Data: TensorFlow, PyTorch, OpenCV, Scikit-learn, Pandas, D3.js
+- Tools: Docker, Git, Linux, Netlify
+
+## Contact & Links
+- GitHub: [github.com/PratikPawar020403](https://github.com/PratikPawar020403)
+- Email: [pratikpawar0222@gmail.com](mailto:pratikpawar0222@gmail.com)
+- Portfolio Repository: [github.com/PratikPawar020403/psp-portfolio](https://github.com/PratikPawar020403/psp-portfolio)

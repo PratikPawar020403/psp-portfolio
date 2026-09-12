@@ -70,21 +70,11 @@ export default {
         'press-start': ['"Press Start 2P"', 'cursive'],
         'vt323': ['VT323', 'monospace'],
         'trebuchet': ['Trebuchet MS', 'sans-serif'],
+        'fraunces': ['Fraunces', 'Georgia', 'serif'],
         // Brand logo font (प्रतिक)
         'sarpanch': ['Sarpanch', 'sans-serif'],
       },
     },
   },
-  safelist: [
-    {
-      pattern: /from-(slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(50|100|200|300|400|500|600|700|800|900|950)/,
-    },
-    {
-      pattern: /to-(slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(50|100|200|300|400|500|600|700|800|900|950)/,
-    },
-    {
-      pattern: /via-(slate|gray|zinc|neutral|stone|red|orange|amber|yellow|lime|green|emerald|teal|cyan|sky|blue|indigo|violet|purple|fuchsia|pink|rose)-(50|100|200|300|400|500|600|700|800|900|950)/,
-    },
-  ],
   plugins: [require("tailwindcss-animate")],
 } satisfies Config;
