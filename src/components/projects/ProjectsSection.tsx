@@ -355,7 +355,7 @@ export const ProjectsSection = () => {
   }
 
   return (
-    <section className="w-full py-20 px-6 md:px-12 relative overflow-hidden" style={{ backgroundColor: BG }}>
+    <section className="w-full pt-24 sm:pt-28 pb-20 px-6 md:px-12 relative overflow-hidden" style={{ backgroundColor: BG }}>
       <div ref={containerRef} className="max-w-5xl mx-auto relative">
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">

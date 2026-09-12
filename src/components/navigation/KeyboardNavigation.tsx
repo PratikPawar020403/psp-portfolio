@@ -37,7 +37,7 @@ export const KeyboardNavigation = () => {
       }
 
       // Quick navigation with number keys
-      if (e.key >= '1' && e.key <= '6' && e.altKey) {
+      if (e.key >= '1' && e.key <= '4' && e.altKey) {
         e.preventDefault();
         const index = parseInt(e.key) - 1;
         if (navigateToSection(index)) {
@@ -57,7 +57,7 @@ export const KeyboardNavigation = () => {
     // Add help message for keyboard navigation
     const helpMessage = () => {
       toast.info(
-        'Keyboard Navigation: Alt + (1-6) for quick navigation to sections, Alt+H or ? for help',
+        'Keyboard Navigation: Alt + (1-4) for quick navigation to sections, Alt+H or ? for help',
         { 
           duration: 5000,
           icon: <Keyboard className="h-4 w-4" /> 

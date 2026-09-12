@@ -20,12 +20,6 @@ const Web1Section = React.lazy(() =>
   })
 );
 
-const SkillsSection = React.lazy(() =>
-  import('@/components/SkillsSection').catch(() => {
-    toast.error('Failed to load Skills section');
-    return { default: () => null };
-  })
-);
 
 const ProjectsSection = React.lazy(() =>
   import('@/components/projects/ProjectsSection').catch(() => {
@@ -88,17 +82,6 @@ const Index = () => {
           <ErrorBoundary>
             <Suspense fallback={<LoadingFallback />}>
               <NotebookSection />
-            </Suspense>
-          </ErrorBoundary>
-        </section>
-      </ScrollReveal>
-
-      {/* Skills Section */}
-      <ScrollReveal stagger={true}>
-        <section id="skills" aria-label="Skills Overview" role="region" className="snap-section bg-[#F4F3EF]">
-          <ErrorBoundary>
-            <Suspense fallback={<LoadingFallback />}>
-              <SkillsSection />
             </Suspense>
           </ErrorBoundary>
         </section>
