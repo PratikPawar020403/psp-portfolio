@@ -23,6 +23,6 @@ Pratik S Pawar is a developer specializing in web development, applied artificia
 - Tools: Docker, Git, Linux, Netlify
 
 ## Contact & Links
+- Portfolio: [psp-02-portfolio.netlify.app](https://psp-02-portfolio.netlify.app/)
 - GitHub: [github.com/PratikPawar020403](https://github.com/PratikPawar020403)
 - Email: [pratikpawar0222@gmail.com](mailto:pratikpawar0222@gmail.com)
-- Portfolio Repository: [github.com/PratikPawar020403/psp-portfolio](https://github.com/PratikPawar020403/psp-portfolio)
