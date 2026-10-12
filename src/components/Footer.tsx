@@ -1,15 +1,37 @@
 import React from 'react';
 import { Github, Mail } from 'lucide-react';
 import TrueFocus from './effects/TrueFocus';
+import Galaxy from './effects/Galaxy';
 
 export const Footer = () => {
   return (
-    <footer className="w-full bg-[#040405] text-white py-12 md:py-24 relative overflow-hidden border-t border-gray-900/30">
-      {/* Background Gradient - Deep Focus */}
-      <div className="absolute inset-0 bg-gradient-to-t from-[#040405] via-[#0a0a0c] to-[#040405] opacity-95" />
+    <footer className="w-full bg-[#040405] text-white pt-20 pb-[52px] md:pt-40 md:pb-[88px] relative overflow-hidden border-t border-gray-900/30">
+      {/* Galaxy Background Effect */}
+      <div className="absolute inset-0 z-0">
+        <Galaxy
+          hueShift={140}
+          saturation={0}
+          density={1}
+          glowIntensity={0.3}
+          starSize={1}
+          flareIntensity={1}
+          twinkleIntensity={0.3}
+          starSpeed={0.5}
+          speed={1}
+          rotationSpeed={0.1}
+          layers={4}
+          direction="forward"
+          repulsionStrength={2}
+          mouseInteraction
+          mouseRepulsion
+          clickWarp
+          intro
+          lightMode={false}
+        />
+      </div>
 
       {/* PSP Logo with TrueFocus Effect */}
-      <div className="flex justify-center mb-8 md:mb-16 relative">
+      <div className="flex justify-center mb-5 md:mb-8 relative z-10">
         <TrueFocus
           sentence="प्र ति क"
           className="font-['Tillana'] font-bold"
@@ -25,7 +47,7 @@ export const Footer = () => {
       </div>
 
       {/* Social Links */}
-      <div className="flex justify-center gap-6 sm:gap-12 mb-8 sm:mb-12 relative z-10">
+      <div className="flex justify-center gap-6 sm:gap-12 mb-5 sm:mb-6 relative z-10">
         <a
           href="https://github.com/PratikPawar020403"
           target="_blank"
@@ -47,8 +69,8 @@ export const Footer = () => {
         </a>
       </div>
 
-      {/* 2025 Loading */}
-      <div className="text-center relative mt-6 sm:mt-0">
+      {/* 2026 Loading */}
+      <div className="text-center relative z-10 mt-3 sm:mt-0">
         <div className="inline-block">
           <div className="relative">
             <span className="font-space-grotesk text-xs sm:text-sm tracking-[0.3em] sm:tracking-[0.5em] text-white/70 animate-pulse">

@@ -44,17 +44,27 @@ const NotebookSection = React.lazy(() =>
 
 
 const Index = () => {
-  // Enable smooth scrolling
+  // Enable smooth scrolling after PSP intro completes (or immediately if skipped)
   useEffect(() => {
-    document.documentElement.classList.add('smooth-scroll', 'momentum-scroll');
+    const enableSmoothScroll = () => {
+      document.documentElement.classList.add('smooth-scroll', 'momentum-scroll');
 
-    // Detect if the user prefers reduced motion
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) {
-      document.documentElement.classList.remove('smooth-scroll');
+      // Detect if the user prefers reduced motion
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (prefersReducedMotion) {
+        document.documentElement.classList.remove('smooth-scroll');
+      }
+    };
+
+    const html = document.documentElement;
+    if (!html.classList.contains('psp-intro-active')) {
+      enableSmoothScroll();
+    } else {
+      window.addEventListener('psp:done', enableSmoothScroll, { once: true });
     }
 
     return () => {
+      window.removeEventListener('psp:done', enableSmoothScroll);
       document.documentElement.classList.remove('smooth-scroll', 'momentum-scroll');
     };
   }, []);
@@ -66,7 +76,7 @@ const Index = () => {
       {!useIsMobile() && <KeyboardNavigation />}
 
       {/* Intro Section */}
-      <ScrollReveal>
+      <ScrollReveal disabled>
         <section id="web1" aria-label="Introduction" role="region" className="snap-section">
           <ErrorBoundary>
             <Suspense fallback={<LoadingFallback />}>

@@ -55,8 +55,8 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
     };
   }, [threshold, delay, disabled, stagger, rootMargin]);
   
-  const baseClass = stagger ? 'stagger-reveal' : 'fade-up';
-  const combinedClassName = `${baseClass} ${className}`;
+  const baseClass = disabled ? '' : stagger ? 'stagger-reveal' : 'fade-up';
+  const combinedClassName = `${baseClass} ${className}`.trim();
   
   return (
     <div ref={ref} className={combinedClassName}>

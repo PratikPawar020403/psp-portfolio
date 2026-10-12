@@ -385,3 +385,27 @@
 .stagger-children.animated>*:nth-child(5) {
   animation: fadeInUp 0.5s ease-out 0.4s forwards;
 }
+
+/* PSP Intro (Simple Fade Entry) - Home screen holds back while intro runs, then fades in */
+html.psp-intro-active:not(.psp-reveal) #web1 .clean-card {
+  opacity: 0;
+}
+
+html.psp-intro-active:not(.psp-reveal) #web1 .animate-marquee {
+  animation-play-state: paused;
+}
+
+html.psp-reveal #web1 .clean-card {
+  animation: win-in 0.8s ease-out both;
+}
+
+@keyframes win-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}

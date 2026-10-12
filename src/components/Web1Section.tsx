@@ -19,60 +19,85 @@ const Web1Section = () => {
   const scrambledTextRef2 = useRef<ScrambledTextHandle>(null);
   const animationContainerRef = useRef<HTMLDivElement>(null);
 
-  const [hasAnimated, setHasAnimated] = useState(false);
+  const hasAnimatedRef = useRef(false);
   const [showTerminal, setShowTerminal] = useState(false);
 
-  // Defer heavy terminal rendering to idle time to prioritize LCP and avoid Total Blocking Time (TBT)
+  // Defer heavy WebGL FaultyTerminal rendering until the PSP portal opens (psp:reveal)
+  // so the 7-second bounce runs at a locked 60fps with zero main-thread/GPU contention.
   useEffect(() => {
-    if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-      const handle = (window as unknown as { requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => number }).requestIdleCallback(
-        () => setShowTerminal(true),
-        { timeout: 1500 }
-      );
-      return () => {
-        if ('cancelIdleCallback' in window) {
-          (window as unknown as { cancelIdleCallback: (h: number) => void }).cancelIdleCallback(handle);
-        }
-      };
+    // Preload the chunk during the bounce (cheap network fetch, no WebGL execution yet)
+    import('./FaultyTerminal').catch(() => {});
+
+    let idleHandle: number | null = null;
+    let timerHandle: ReturnType<typeof setTimeout> | null = null;
+
+    const scheduleTerminal = () => {
+      if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+        idleHandle = (window as unknown as { requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => number }).requestIdleCallback(
+          () => setShowTerminal(true),
+          { timeout: 1000 }
+        );
+      } else {
+        timerHandle = setTimeout(() => setShowTerminal(true), 200);
+      }
+    };
+
+    const html = document.documentElement;
+    if (html.classList.contains('psp-reveal') || !html.classList.contains('psp-intro-active')) {
+      scheduleTerminal();
+    } else {
+      window.addEventListener('psp:reveal', scheduleTerminal, { once: true });
     }
 
-    const t = setTimeout(() => setShowTerminal(true), 1200);
-    return () => clearTimeout(t);
+    return () => {
+      window.removeEventListener('psp:reveal', scheduleTerminal);
+      if (idleHandle !== null && 'cancelIdleCallback' in window) {
+        (window as unknown as { cancelIdleCallback: (h: number) => void }).cancelIdleCallback(idleHandle);
+      }
+      if (timerHandle !== null) {
+        clearTimeout(timerHandle);
+      }
+    };
   }, []);
 
-  // Viewport detection for animation trigger
+  // Trigger hero ScrambledText animations when the PSP portal opens (or immediately on refresh if intro skipped)
   useEffect(() => {
-    if (hasAnimated) return;
-    if (!animationContainerRef.current) return;
+    let firstTimer: ReturnType<typeof setTimeout> | null = null;
+    let secondTimer: ReturnType<typeof setTimeout> | null = null;
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !hasAnimated) {
-          setHasAnimated(true);
+    const startHeroEntrance = () => {
+      if (hasAnimatedRef.current) return;
+      hasAnimatedRef.current = true;
 
-          // Trigger animations only on desktop to save CPU (SRE P0)
-          if (!isMobile) {
-            // Trigger first animation
-            scrambledTextRef1.current?.trigger();
+      firstTimer = setTimeout(() => {
+        scrambledTextRef1.current?.trigger();
+      }, 400);
 
-            // Trigger second animation after 500ms delay
-            setTimeout(() => {
-              scrambledTextRef2.current?.trigger();
-            }, 500);
-          }
+      secondTimer = setTimeout(() => {
+        scrambledTextRef2.current?.trigger();
+      }, 800);
+    };
 
-          observer.disconnect();
-        }
-      },
-      { threshold: 0.5 }
-    );
+    const html = document.documentElement;
+    if (html.classList.contains('psp-reveal') || !html.classList.contains('psp-intro-active')) {
+      startHeroEntrance();
+    } else {
+      window.addEventListener('psp:reveal', startHeroEntrance, { once: true });
+    }
 
-    observer.observe(animationContainerRef.current);
-    return () => observer.disconnect();
-  }, [hasAnimated]);
+    return () => {
+      window.removeEventListener('psp:reveal', startHeroEntrance);
+      if (firstTimer !== null) {
+        clearTimeout(firstTimer);
+      }
+      if (secondTimer !== null) {
+        clearTimeout(secondTimer);
+      }
+    };
+  }, []);
 
   return (
-    <div className="min-h-screen flex flex-col items-center justify-start bg-black text-[#39FF14] relative overflow-hidden">
+    <div className="min-h-screen flex flex-col items-center justify-center pt-28 pb-8 bg-black text-[#39FF14] relative overflow-hidden">
       {/* FaultyTerminal Background - Disabled on Mobile for Performance (SRE P0) */}
       <div className="absolute inset-0 z-0">
         {!isMobile && showTerminal && (
@@ -118,7 +143,7 @@ const Web1Section = () => {
       <div className="container max-w-4xl relative z-20">
         <div
           ref={animationContainerRef}
-          className="clean-card bg-black/5 backdrop-blur-sm border-4 border-[#39FF14]/30 shadow-[0_0_20px_rgba(57,255,20,0.3)] relative mt-8"
+          className="clean-card bg-black/5 backdrop-blur-sm border-4 border-[#39FF14]/30 shadow-[0_0_20px_rgba(57,255,20,0.3)] relative"
         >
 
           {/* Title Bar */}
@@ -126,7 +151,7 @@ const Web1Section = () => {
             <Monitor className="w-8 h-8 animate-pulse" />
             <Mail className="w-8 h-8 animate-bounce" />
             <Save className="w-8 h-8 animate-spin-slow" />
-            <span className="text-[#39FF14] font-bold tracking-wider font-press-start text-lg">WELCOME.HTML</span>
+            <span className="text-[#39FF14] font-bold tracking-wider font-press-start text-lg">WELCOME.TXT</span>
           </div>
 
           {/* Main Heading */}
