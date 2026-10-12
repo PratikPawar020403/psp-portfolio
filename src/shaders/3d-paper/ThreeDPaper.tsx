@@ -1,6 +1,20 @@
 import { useEffect, useMemo, useRef, useState, type CSSProperties } from "react";
 
-import certificateSource from "./sources/3d-paper-certificate.html?raw";
+let cachedCertificateSource: string | null = null;
+let certificateSourcePromise: Promise<string> | null = null;
+
+function loadCertificateSource(): Promise<string> {
+  if (cachedCertificateSource !== null) {
+    return Promise.resolve(cachedCertificateSource);
+  }
+  if (!certificateSourcePromise) {
+    certificateSourcePromise = import("./sources/3d-paper-certificate.html?raw").then((mod) => {
+      cachedCertificateSource = mod.default;
+      return mod.default;
+    });
+  }
+  return certificateSourcePromise;
+}
 
 export type ThreeDPaperVariant = "certificate" | string;
 
@@ -11,19 +25,32 @@ export type ThreeDPaperProps = {
   imageUrl?: string;
 };
 
-export function ThreeDPaper({ className = "", style, variant = "certificate", imageUrl }: ThreeDPaperProps) {
+export function ThreeDPaper({ className = "", style, imageUrl }: ThreeDPaperProps) {
   const hostRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
   const [hostVisible, setHostVisible] = useState(false);
   const [ready, setReady] = useState(false);
+  const [rawSource, setRawSource] = useState<string | null>(cachedCertificateSource);
+
+  useEffect(() => {
+    if (!hostVisible || rawSource !== null) return;
+    let cancelled = false;
+    loadCertificateSource().then((src) => {
+      if (!cancelled) setRawSource(src);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [hostVisible, rawSource]);
 
   const srcDoc = useMemo(() => {
-    let source = certificateSource;
+    if (!rawSource) return null;
+    let source = rawSource;
     if (imageUrl) {
       source = source.replace('/*CUSTOM_IMAGE_URL*/ ""', `/*CUSTOM_IMAGE_URL*/ ${JSON.stringify(imageUrl)}`);
     }
     return source;
-  }, [imageUrl]);
+  }, [rawSource, imageUrl]);
 
   useEffect(() => {
     if (ready && iframeRef.current?.contentWindow && imageUrl) {
@@ -95,7 +122,7 @@ export function ThreeDPaper({ className = "", style, variant = "certificate", im
         ...style,
       }}
     >
-      {mounted ? (
+      {mounted && srcDoc ? (
         <iframe
           ref={iframeRef}
           title="3D Paper — Certificate"

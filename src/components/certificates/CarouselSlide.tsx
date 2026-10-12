@@ -1,10 +1,8 @@
-
 import React from 'react';
 import { cn } from "@/lib/utils";
 import { CertificateCard } from './CertificateCard';
 import { Certificate } from '@/types/certificate';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { motion } from 'framer-motion';
 
 interface CarouselSlideProps {
   certificate: Certificate;

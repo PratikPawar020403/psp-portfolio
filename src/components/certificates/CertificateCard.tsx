@@ -1,17 +1,7 @@
-
 import { memo } from 'react';
 import { cn } from "@/lib/utils";
-import { motion } from "framer-motion";
 import { ThreeDPaper } from "@designcodeio/threeui";
 import "@designcodeio/threeui/style.css";
-
-export function Scene() {
-  return (
-    <div className="shader-frame w-full h-full relative">
-      <ThreeDPaper variant="certificate" />
-    </div>
-  );
-}
 
 interface CertificateCardProps {
   title?: string;

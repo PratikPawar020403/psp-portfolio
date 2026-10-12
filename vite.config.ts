@@ -27,7 +27,7 @@ export default defineConfig(({ mode }) => ({
       output: {
         manualChunks: {
           // Core React
-          'react-vendor': ['react', 'react-dom'],
+          'react-vendor': ['react', 'react-dom', 'react-router-dom'],
           // Animation libraries
           'animation': ['framer-motion'],
           // UI components
@@ -39,7 +39,7 @@ export default defineConfig(({ mode }) => ({
         },
       },
     },
-    chunkSizeWarningLimit: 500,
+    chunkSizeWarningLimit: 650,
   },
   optimizeDeps: {
     include: ['react', 'react-dom'],

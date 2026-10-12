@@ -2,7 +2,6 @@
 import React, { Suspense, useEffect } from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { LoadingFallback } from '@/components/LoadingFallback';
-import Footer from '@/components/Footer';
 
 import { ScrollToTop } from '@/components/navigation/ScrollToTop';
 import { ScrollProgress } from '@/components/navigation/ScrollProgress';
@@ -38,6 +37,12 @@ const SkillPowerUpsSection = React.lazy(() =>
 const NotebookSection = React.lazy(() =>
   import('@/components/NotebookSection').catch(() => {
     toast.error('Failed to load Notebook section');
+    return { default: () => null };
+  })
+);
+
+const Footer = React.lazy(() =>
+  import('@/components/Footer').catch(() => {
     return { default: () => null };
   })
 );
