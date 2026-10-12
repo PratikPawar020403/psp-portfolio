@@ -100,7 +100,7 @@ const Index = () => {
 
       {/* Skill Power-ups Section */}
       <ScrollReveal>
-        <section id="skillpowerups" aria-label="Skill Certifications" role="region" className="snap-section bg-[#161616]">
+        <section id="skillpowerups" aria-label="Skill Certifications" role="region" className="snap-section bg-[#ecebe4]">
           <ErrorBoundary>
             <Suspense fallback={<LoadingFallback />}>
               <SkillPowerUpsSection />

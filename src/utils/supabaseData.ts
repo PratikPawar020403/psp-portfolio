@@ -49,7 +49,8 @@ export async function fetchProjects(): Promise<Project[]> {
     // Ensure size is a valid ProjectSize type or default to 'large'
     size: (project.size === 'small' || project.size === 'medium' || project.size === 'large'
       ? project.size as ProjectSize
-      : 'large') as ProjectSize
+      : 'large') as ProjectSize,
+    createdAt: project.created_at,
   }));
 }
 

@@ -553,6 +553,17 @@ function inQuad(px,py){
 }
 function useHint(){ hintUsed=true; hintEl.style.opacity='0'; }
 
+let lastParentActive = false;
+function notifyParent(){
+  const active = Boolean(dragging || overSheet);
+  if(active !== lastParentActive){
+    lastParentActive = active;
+    try {
+      window.parent.postMessage({ type: 'CERT_INTERACT', active }, '*');
+    } catch(err){}
+  }
+}
+
 window.addEventListener('pointermove', e=>{
   mouse.tx = (e.clientX/window.innerWidth  - 0.5)*2;
   mouse.ty = (e.clientY/window.innerHeight - 0.5)*2;
@@ -566,23 +577,48 @@ window.addEventListener('pointermove', e=>{
   }
   overSheet = inQuad(e.clientX,e.clientY);
   hoverTarget = overSheet ? 1 : 0;
+  notifyParent();
 }, {passive:true});
 
 window.addEventListener('pointerdown', e=>{
   if(inQuad(e.clientX,e.clientY)){
     dragging=true; moved=0; lastPX=e.clientX; lastPY=e.clientY;
     velYaw=velPitch=0; prevYaw=dragYaw; prevPitch=dragPitch;
+    hoverTarget = 1;
+    try { document.body.setPointerCapture(e.pointerId); } catch(err){}
+    notifyParent();
   }
 });
-window.addEventListener('pointerup', ()=>{
-  if(dragging){ dragging=false; release=0.6; }
+function stopDrag(e){
+  if(dragging){
+    dragging=false;
+    release=0.6;
+    if(e && e.pointerId !== undefined){
+      try {
+        if(document.body.hasPointerCapture(e.pointerId)){
+          document.body.releasePointerCapture(e.pointerId);
+        }
+      } catch(err){}
+    }
+    notifyParent();
+  }
+}
+window.addEventListener('pointerup', stopDrag);
+window.addEventListener('pointercancel', stopDrag);
+window.addEventListener('pointerleave', ()=>{
+  if(!dragging){
+    overSheet=false;
+    hoverTarget=0;
+    mouse.tx=0;
+    mouse.ty=0;
+    notifyParent();
+  }
 });
-window.addEventListener('pointerleave', ()=>{ hoverTarget=0; });
 
 /* ======================================================================
    5. RESIZE
    ====================================================================== */
-let vw=0, vh=0;
+let vw=0, vh=0, baseScale=1;
 function resize(){
   vw = window.innerWidth; vh = window.innerHeight;
   renderer.setPixelRatio(Math.min(window.devicePixelRatio||1, 2));
@@ -591,7 +627,8 @@ function resize(){
   const visH = 2*camera.position.z*Math.tan(T.MathUtils.degToRad(camera.fov)/2);
   const visW = visH*camera.aspect;
   const wCap = Math.min(0.88, 0.60 + Math.max(0, 1.45 - camera.aspect)*0.45);
-  group.scale.setScalar(Math.min(visH*0.735/SH, visW*wCap/SW));
+  baseScale = Math.min(visH*0.735/SH, visW*wCap/SW);
+  group.scale.setScalar(baseScale * (1 + hover * 0.05));
 }
 window.addEventListener('resize', resize);
 
@@ -636,6 +673,9 @@ function frame(){
   }
   prevYaw = dragYaw; prevPitch = dragPitch;
 
+  hover += (hoverTarget - hover) * Math.min(1, dt*4.5);
+  group.scale.setScalar(baseScale * (1 + hover * 0.05));
+
   mouse.x += (mouse.tx-mouse.x)*Math.min(1,dt*3.0);
   mouse.y += (mouse.ty-mouse.y)*Math.min(1,dt*3.0);
   const idle = REDUCED ? 0 : 1;
@@ -647,7 +687,6 @@ function frame(){
   group.position.x = Math.sin(t*0.21)*0.05*idle + mouse.x*0.10;
   group.updateMatrixWorld();
 
-  hover += (hoverTarget - hover) * Math.min(1, dt*4.5);
   touchLight.intensity = hover * 2.6 * intro;
   if(hover > 0.002){
     lightPos.set(mouse.tx, -mouse.ty, 0.5).unproject(camera).sub(camera.position).normalize();

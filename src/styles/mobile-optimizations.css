@@ -50,12 +50,6 @@
     z-index: 1;
   }
   
-  /* Certificate carousel mobile optimization */
-  [aria-roledescription="carousel"] {
-    margin: 0 -1rem;
-    padding: 0 1rem;
-  }
-  
   /* Reduce excessive spacing between sections */
   .snap-section + .snap-section {
     margin-top: -15vh;
@@ -69,7 +63,7 @@
   }
   
   /* Section padding optimization */
-  #web1, #notebook, #projects, #skillpowerups {
+  #web1, #notebook, #projects {
     padding: 2rem 1rem;
   }
   

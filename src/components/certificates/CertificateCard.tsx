@@ -30,22 +30,10 @@ export const CertificateCard = memo(({
   image,
 }: CertificateCardProps) => {
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{
-        opacity: 1,
-        y: 0,
-        transition: { duration: 0.5, ease: "easeOut" }
-      }}
-      viewport={{ once: true, margin: "-100px" }}
-      whileHover={{
-        scale: 1.02,
-        transition: { duration: 0.3 }
-      }}
+    <div
       className={cn(
-        "group relative",
+        "group relative select-none transform-gpu transition-transform duration-300 ease-out hover:scale-[1.04] hover:z-20",
         isMobile ? "w-full h-[500px] mx-auto" : "w-full h-[520px]",
-        "transition-all duration-500 ease-in-out transform-gpu",
       )}
       role="figure"
       aria-label={`${title} by ${issuer}`}
@@ -53,7 +41,7 @@ export const CertificateCard = memo(({
       <div className="shader-frame w-full h-full relative">
         <ThreeDPaper variant="certificate" imageUrl={image} />
       </div>
-    </motion.div>
+    </div>
   );
 });
 

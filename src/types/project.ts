@@ -11,4 +11,5 @@ export type Project = {
   details: string;
   techStack: string[];
   size?: ProjectSize;
+  createdAt?: string;
 };

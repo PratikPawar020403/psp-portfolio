@@ -14,10 +14,7 @@ export type ThreeDPaperProps = {
 export function ThreeDPaper({ className = "", style, variant = "certificate", imageUrl }: ThreeDPaperProps) {
   const hostRef = useRef<HTMLDivElement>(null);
   const iframeRef = useRef<HTMLIFrameElement>(null);
-  const [documentVisible, setDocumentVisible] = useState(() => (
-    typeof document === "undefined" || !document.hidden
-  ));
-  const [hostVisible, setHostVisible] = useState(true);
+  const [hostVisible, setHostVisible] = useState(false);
   const [ready, setReady] = useState(false);
 
   const srcDoc = useMemo(() => {
@@ -39,26 +36,48 @@ export function ThreeDPaper({ className = "", style, variant = "certificate", im
 
   useEffect(() => {
     const host = hostRef.current;
-    if (!host || typeof IntersectionObserver === "undefined") return undefined;
-    const observer = new IntersectionObserver(([entry]) => {
-      setHostVisible(entry?.isIntersecting ?? true);
-    }, { rootMargin: "80px" });
-    observer.observe(host);
-    return () => observer.disconnect();
+    if (!host || typeof window === "undefined") {
+      setHostVisible(true);
+      return undefined;
+    }
+
+    const slide = host.closest(".carousel-slide") as HTMLElement | null;
+    if (!slide) {
+      setHostVisible(true);
+      return undefined;
+    }
+
+    const syncActive = () => {
+      const visible = slide.dataset.active === "1";
+      setHostVisible((prev) => {
+        if (prev !== visible && !visible) {
+          setReady(false);
+        }
+        return visible;
+      });
+    };
+
+    syncActive();
+    slide.addEventListener("slideactivechange", syncActive);
+    return () => {
+      slide.removeEventListener("slideactivechange", syncActive);
+    };
   }, []);
 
-  useEffect(() => {
-    if (typeof document === "undefined") return undefined;
-    const update = () => setDocumentVisible(!document.hidden);
-    document.addEventListener("visibilitychange", update);
-    return () => document.removeEventListener("visibilitychange", update);
-  }, []);
+  const mounted = hostVisible;
 
-  const mounted = hostVisible && documentVisible;
-
-  useEffect(() => {
-    setReady(false);
-  }, [mounted, variant, imageUrl]);
+  const handleLoad = () => {
+    setReady(true);
+    if (iframeRef.current?.contentWindow && imageUrl) {
+      iframeRef.current.contentWindow.postMessage(
+        {
+          type: "SET_IMAGE",
+          url: imageUrl,
+        },
+        "*"
+      );
+    }
+  };
 
   return (
     <div
@@ -72,6 +91,7 @@ export function ThreeDPaper({ className = "", style, variant = "certificate", im
         overflow: "hidden",
         background: "transparent",
         pointerEvents: "auto",
+        userSelect: "none",
         ...style,
       }}
     >
@@ -82,7 +102,7 @@ export function ThreeDPaper({ className = "", style, variant = "certificate", im
           srcDoc={srcDoc}
           sandbox="allow-scripts"
           loading="eager"
-          onLoad={() => setReady(true)}
+          onLoad={handleLoad}
           style={{
             position: "absolute",
             inset: 0,

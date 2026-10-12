@@ -51,6 +51,12 @@ function getProjectColor(category?: string): string {
 }
 
 function getProjectYear(project: Project): string {
+  if (project.createdAt) {
+    const yearMatch = project.createdAt.match(/^(\d{4})/);
+    if (yearMatch) return yearMatch[1];
+    const parsedYear = new Date(project.createdAt).getFullYear();
+    if (!Number.isNaN(parsedYear)) return String(parsedYear);
+  }
   const text = `${project.title} ${project.description} ${project.details || ''}`;
   const match = text.match(/\b(202[0-9])\b/);
   return match ? match[1] : "2025";

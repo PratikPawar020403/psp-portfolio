@@ -39,26 +39,22 @@
   animation-delay: -10s;
 }
 
-/* Certificate Carousel CSS-only Infinite Scroll */
-@keyframes scroll {
-  0% {
-    transform: translateX(0);
-  }
-
-  100% {
-    transform: translateX(calc(-100% / 2));
-  }
-}
-
+/* Certificate Carousel Layout (driven by single time-based RAF loop) */
 .certificates-carousel {
   position: relative;
-  overflow: hidden;
   width: 100%;
   margin: 0 auto;
   backface-visibility: hidden;
   transform-style: preserve-3d;
   perspective: 1000px;
-  border-radius: 12px;
+  touch-action: pan-y;
+  user-select: none;
+  -webkit-user-select: none;
+  cursor: grab;
+}
+
+.certificates-carousel.is-dragging {
+  cursor: grabbing;
 }
 
 .certificates-track {
@@ -66,14 +62,12 @@
   width: fit-content;
   display: flex;
   gap: 1.5rem;
-  animation: scroll 40s linear infinite;
   backface-visibility: hidden;
-  will-change: transform;
 }
 
-.certificates-carousel:hover .certificates-track,
-.certificates-track.paused {
-  animation-play-state: paused;
+.carousel-slide {
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 /* Optimized Animations */
