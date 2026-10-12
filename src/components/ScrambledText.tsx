@@ -50,6 +50,8 @@ const ScrambledText = forwardRef<ScrambledTextHandle, ScrambledTextProps>(({
     // ... logic continues below for animation loop ... 
 
     let iterations = 0;
+    const totalTicks = duration > 0 ? (duration * 1000) / 50 : originalText.length * 3;
+    const step = originalText.length / Math.max(1, totalTicks);
 
     intervalRef.current = setInterval(() => {
       element.innerText = originalText
@@ -70,7 +72,7 @@ const ScrambledText = forwardRef<ScrambledTextHandle, ScrambledTextProps>(({
         }
       }
 
-      iterations += 1 / 3;
+      iterations += step;
     }, 50);
   };
 

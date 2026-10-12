@@ -153,7 +153,7 @@ const Web1Section = () => {
             <p className="font-normal text-2xl">
               <ScrambledText
                 ref={scrambledTextRef2}
-                duration={3}
+                duration={10}
                 scrambleChars=".:|"
                 triggerOnMount={false}
               >
