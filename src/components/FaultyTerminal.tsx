@@ -3,6 +3,19 @@ import React, { useEffect, useRef, useMemo, useCallback } from "react";
 import "./FaultyTerminal.css";
 
 type Vec2 = [number, number];
+export type FaultyTerminalClickEffect = "glitch" | "degauss" | "none";
+
+const MAX_CLICKS = 4;
+const CLICK_SECONDS: Record<FaultyTerminalClickEffect, number> = {
+  glitch: 0.7,
+  degauss: 1.6,
+  none: 0,
+};
+const CLICK_MODES: Record<FaultyTerminalClickEffect, number> = {
+  none: 0,
+  glitch: 1,
+  degauss: 2,
+};
 
 export interface FaultyTerminalProps
   extends React.HTMLAttributes<HTMLDivElement> {
@@ -24,6 +37,7 @@ export interface FaultyTerminalProps
   dpr?: number;
   pageLoadAnimation?: boolean;
   brightness?: number;
+  clickEffect?: FaultyTerminalClickEffect;
 }
 
 const vertexShader = `
@@ -61,13 +75,25 @@ uniform float uUseMouse;
 uniform float uPageLoadProgress;
 uniform float uUsePageLoadAnimation;
 uniform float uBrightness;
+uniform vec4  uClicks[${MAX_CLICKS}];
+uniform float uClickMode;
+uniform float uClickSeconds;
+uniform float uClock;
 
 float time;
+float clickTear;
+float clickSplit;
 
 float hash21(vec2 p){
   p = fract(p * 234.56);
   p += dot(p, p + 34.56);
   return fract(p.x * p.y);
+}
+
+float hashCell(vec2 p) {
+  vec3 q = fract(vec3(p.xyx) * 0.1031);
+  q += dot(q, q.yzx + 33.33);
+  return fract((q.x + q.y) * q.z);
 }
 
 float noise(vec2 p)
@@ -185,6 +211,8 @@ vec3 getColor(vec2 p){
       p.x += extra;
     }
 
+    p.x += clickTear;
+
     float middle = digit(p);
     
     const float off = 0.002;
@@ -210,12 +238,46 @@ void main() {
     if(uCurvature != 0.0){
       uv = barrel(uv);
     }
+
+    clickTear = 0.0;
+    clickSplit = 0.0;
+    if (uClickMode > 0.5) {
+      for (int k = 0; k < ${MAX_CLICKS}; k++) {
+        vec4 click = uClicks[k];
+        if (click.w <= 0.0) continue;
+        float age = uClock - click.z;
+        if (age < 0.0 || age > uClickSeconds) continue;
+        float life = age / uClickSeconds;
+        float envelope = (1.0 - life) * (1.0 - life);
+        if (uClickMode < 1.5) {
+          float tick = floor(age * 30.0);
+          float bands = 14.0 + 26.0 * hashCell(vec2(click.z, tick * 0.37));
+          float row = floor(uv.y * bands);
+          float pickRow = hashCell(vec2(row + tick * 7.0, click.z * 17.0));
+          float torn = step(0.42, pickRow);
+          float reach = exp(-abs(uv.y - click.y) * 2.5);
+          float shift = (hashCell(vec2(row * 1.7 + tick, click.z)) - 0.5) * 0.22;
+          clickTear += shift * torn * envelope * reach;
+          clickSplit = max(clickSplit, envelope * reach * (0.4 + 0.6 * torn));
+        } else {
+          vec2 aspect = vec2(iResolution.x / iResolution.y, 1.0);
+          vec2 delta = (uv - click.xy) * aspect;
+          float dist = length(delta);
+          float front = age * 1.6;
+          float band = exp(-pow((dist - front) / 0.18, 2.0));
+          float wave = sin((dist - front) * 40.0) * band;
+          uv += delta / aspect * wave * 0.05 * envelope;
+          clickSplit = max(clickSplit, envelope * band);
+        }
+      }
+    }
     
     vec2 p = uv * uScale;
     vec3 col = getColor(p);
 
-    if(uChromaticAberration != 0.0){
-      vec2 ca = vec2(uChromaticAberration) / iResolution.xy;
+    float split = uChromaticAberration + clickSplit * 6.0;
+    if(split != 0.0){
+      vec2 ca = vec2(split) / iResolution.xy;
       col.r = getColor(p + ca).r;
       col.b = getColor(p - ca).b;
     }
@@ -266,6 +328,7 @@ export default function FaultyTerminal({
   dpr = Math.min(window.devicePixelRatio || 1, 2),
   pageLoadAnimation = true,
   brightness = 1,
+  clickEffect = "degauss",
   className,
   style,
   ...rest
@@ -276,6 +339,11 @@ export default function FaultyTerminal({
   const mouseRef = useRef({ x: 0.5, y: 0.5 });
   const smoothMouseRef = useRef({ x: 0.5, y: 0.5 });
   const frozenTimeRef = useRef(0);
+  const clockRef = useRef(0);
+  const clickIndexRef = useRef(0);
+  const clicksRef = useRef<number[][]>(
+    Array.from({ length: MAX_CLICKS }, () => [0, 0, 0, 0])
+  );
   const rafRef = useRef<number>(0);
   const loadAnimationStartRef = useRef<number>(0);
   const timeOffsetRef = useRef<number>(Math.random() * 100);
@@ -296,6 +364,24 @@ export default function FaultyTerminal({
     mouseRef.current = { x, y };
   }, []);
 
+  const handlePointerDown = useCallback(
+    (e: PointerEvent) => {
+      if (clickEffect === "none") return;
+      const ctn = containerRef.current;
+      if (!ctn) return;
+      const rect = ctn.getBoundingClientRect();
+      if (rect.width <= 0 || rect.height <= 0) return;
+      const x = (e.clientX - rect.left) / rect.width;
+      const y = 1 - (e.clientY - rect.top) / rect.height;
+      if (x < 0 || x > 1 || y < 0 || y > 1) return;
+
+      const idx = clickIndexRef.current;
+      clicksRef.current[idx] = [x, y, clockRef.current, 1];
+      clickIndexRef.current = (idx + 1) % MAX_CLICKS;
+    },
+    [clickEffect]
+  );
+
   useEffect(() => {
     const ctn = containerRef.current;
     if (!ctn) return;
@@ -306,6 +392,9 @@ export default function FaultyTerminal({
     gl.clearColor(0, 0, 0, 1);
 
     const geometry = new Triangle(gl);
+
+    const clickMode = CLICK_MODES[clickEffect] ?? 0;
+    const clickSeconds = CLICK_SECONDS[clickEffect] ?? 0;
 
     const program = new Program(gl, {
       vertex: vertexShader,
@@ -342,6 +431,10 @@ export default function FaultyTerminal({
         uPageLoadProgress: { value: pageLoadAnimation ? 0 : 1 },
         uUsePageLoadAnimation: { value: pageLoadAnimation ? 1 : 0 },
         uBrightness: { value: brightness },
+        uClicks: { value: clicksRef.current },
+        uClickMode: { value: clickMode },
+        uClickSeconds: { value: clickSeconds },
+        uClock: { value: 0 },
       },
     });
     programRef.current = program;
@@ -369,8 +462,19 @@ export default function FaultyTerminal({
         loadAnimationStartRef.current = t;
       }
 
+      const nowSeconds = t * 0.001;
+      clockRef.current = nowSeconds;
+      program.uniforms.uClock.value = nowSeconds;
+
+      for (let k = 0; k < MAX_CLICKS; k++) {
+        const c = clicksRef.current[k];
+        if (c[3] > 0 && nowSeconds - c[2] > clickSeconds) {
+          c[3] = 0;
+        }
+      }
+
       if (!pause) {
-        const elapsed = (t * 0.001 + timeOffsetRef.current) * timeScale;
+        const elapsed = (nowSeconds + timeOffsetRef.current) * timeScale;
         program.uniforms.iTime.value = elapsed;
         frozenTimeRef.current = elapsed;
       } else {
@@ -402,11 +506,15 @@ export default function FaultyTerminal({
     ctn.appendChild(gl.canvas);
 
     if (mouseReact) window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    if (clickEffect !== "none") {
+      window.addEventListener("pointerdown", handlePointerDown, { passive: true });
+    }
 
     return () => {
       cancelAnimationFrame(rafRef.current);
       resizeObserver.disconnect();
       if (mouseReact) window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("pointerdown", handlePointerDown);
       if (gl.canvas.parentElement === ctn) ctn.removeChild(gl.canvas);
       gl.getExtension("WEBGL_lose_context")?.loseContext();
       loadAnimationStartRef.current = 0;
@@ -431,7 +539,9 @@ export default function FaultyTerminal({
     mouseStrength,
     pageLoadAnimation,
     brightness,
+    clickEffect,
     handleMouseMove,
+    handlePointerDown,
   ]);
 
   return (

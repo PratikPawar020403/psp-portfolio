@@ -91,6 +91,7 @@ const Web1Section = () => {
               scale={1}
               gridMul={[2, 1]}
               digitSize={1.5}
+              clickEffect="degauss"
               dpr={dpr}
               className="w-full h-full opacity-80"
             />
