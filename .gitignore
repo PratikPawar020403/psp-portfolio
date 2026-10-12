@@ -31,5 +31,5 @@ build_log.txt
 
 # Environment Variables
 .env
-.env.production
-.env.development
+.env.*
+!.env.example

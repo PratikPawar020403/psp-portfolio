@@ -1,2 +1,4 @@
 User-agent: *
 Allow: /
+
+Sitemap: https://psp-02-portfolio.netlify.app/sitemap.xml
