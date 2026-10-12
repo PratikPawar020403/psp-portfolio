@@ -63,7 +63,7 @@
   }
   
   /* Section padding optimization */
-  #web1, #notebook, #projects {
+  #web1, #projects {
     padding: 2rem 1rem;
   }
   

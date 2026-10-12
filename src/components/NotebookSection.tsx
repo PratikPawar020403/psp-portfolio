@@ -34,18 +34,18 @@ const NotebookSection = () => {
         <section
             ref={sectionRef}
             id="academic-notebook-section"
-            className="w-full flex flex-col items-center my-20 snap-section"
+            className="w-full h-screen h-[100dvh] flex flex-col items-center justify-center snap-section overflow-hidden bg-[#eef1f5]"
         >
             {shouldLoad ? (
                 <iframe
                     src="https://academic-notebook.netlify.app/"
                     loading="lazy"
                     title="Academic Notebook"
-                    className="w-full max-w-[1200px] h-[900px] max-md:h-[650px] border-none"
+                    className="w-full h-full border-none"
                 />
             ) : (
-                <div className="w-full max-w-[1200px] h-[900px] max-md:h-[650px] bg-gray-900/50 flex items-center justify-center">
-                    <p className="text-gray-400">Loading Notebook...</p>
+                <div className="w-full h-full bg-[#eef1f5] flex items-center justify-center">
+                    <p className="text-slate-500">Loading Notebook...</p>
                 </div>
             )}
         </section>
