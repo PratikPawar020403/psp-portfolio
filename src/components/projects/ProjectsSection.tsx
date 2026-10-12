@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useRef, useMemo, Suspense } from 'react';
 import { ArrowUpRight, Github, ExternalLink } from 'lucide-react';
 import { Project } from '@/types/project';
-import { projects as fallbackProjects } from '@/data/projects';
 import { fetchProjects } from '@/utils/supabaseData';
 import { useIsMobile } from '@/hooks/use-mobile';
 
@@ -296,7 +295,7 @@ function ProjectRow({ project, expanded, onToggle, onHover, onLeave }: ProjectRo
 
 export const ProjectsSection = () => {
   const isMobile = useIsMobile();
-  const [projectsData, setProjectsData] = useState<Project[]>(fallbackProjects);
+  const [projectsData, setProjectsData] = useState<Project[]>([]);
   const [filter, setFilter] = useState("All");
   const [expandedId, setExpandedId] = useState<number | null>(null);
   const [preview, setPreview] = useState<{
@@ -309,7 +308,7 @@ export const ProjectsSection = () => {
 
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // Fetch projects from Supabase on mount, falling back to local projectsData
+  // Fetch projects from Supabase on mount
   useEffect(() => {
     let isMounted = true;
     const loadProjects = async () => {
