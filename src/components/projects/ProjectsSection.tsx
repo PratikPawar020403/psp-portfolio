@@ -411,7 +411,7 @@ export const ProjectsSection = () => {
               Selected work
             </h2>
             <p className="text-sm sm:text-base mt-2" style={{ color: MUTED }}>
-              From ai-film to data-driven applications , automations and ml systems .
+              From Ai-Film to data-driven applications , automations and ml systems .
             </p>
           </div>
           <p className="text-sm font-mono" style={{ color: MUTED }}>
