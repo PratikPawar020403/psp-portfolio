@@ -1,72 +1,68 @@
-# 🚀 Pratik S Pawar - Portfolio
+# Pratik S Pawar — Portfolio
 
-A modern, high-performance portfolio website showcasing projects, skills, and professional journey. Built with cutting-edge web technologies for a smooth and engaging user experience.
+Personal portfolio website showcasing projects, academic background, and certifications with retro CRT/terminal aesthetics, interactive WebGL shaders, and a 3D paper certificate carousel.
 
-## 🛠️ Tech Stack
+- **Live URL**: [https://psp-02-portfolio.netlify.app/](https://psp-02-portfolio.netlify.app/)
 
-- **Framework**: [React](https://react.dev/) + [Vite](https://vitejs.dev/)
-- **Language**: [TypeScript](https://www.typescriptlang.org/)
-- **Styling**: [Tailwind CSS](https://tailwindcss.com/) + [Shadcn UI](https://ui.shadcn.com/)
-- **Animation**: [Framer Motion](https://www.framer.com/motion/)
-- **Backend/DB**: [Supabase](https://supabase.com/)
-- **Deployment**: [Netlify](https://www.netlify.com/)
+## Tech Stack
 
-## ✨ Features
+- **Framework**: [React 18](https://react.dev/) + [Vite 5](https://vitejs.dev/) (`@vitejs/plugin-react-swc`)
+- **Language**: [TypeScript 5](https://www.typescriptlang.org/)
+- **Styling**: [Tailwind CSS 3](https://tailwindcss.com/) + Radix Tooltip
+- **Graphics & Animation**: [OGL](https://github.com/oframe/ogl) WebGL (`FaultyTerminal`, `GhostFibers`), Custom WebGL2 (`Galaxy`), Three.js 3D Paper Shader (`ThreeDPaper`), [Framer Motion](https://www.framer.com/motion/)
+- **Backend / Data**: [Supabase](https://supabase.com/) (with offline/local fallback data in `src/data/projects.ts` and `src/components/certificates/CertificateCarousel.tsx`)
+- **Deployment**: [Netlify](https://www.netlify.com/) (`public/_redirects` & `public/_headers`)
 
-- **Interactive UI**: Smooth animations and responsive design.
-- **Project Showcase**: Detailed view of projects with filtering.
-- **Certifications**: Carousel display of professional certifications.
-- **Dark Mode**: Optimized dark-themed interface.
-- **Performance**: High Lighthouse scores for speed and accessibility.
-
-## 🚀 Getting Started
+## Getting Started
 
 ### Prerequisites
 
-Make sure you have **Node.js** (v18+) installed.
+- **Node.js**: `>= 20.0.0` (Node `22` LTS pinned in `.nvmrc`)
+- **npm**: `10+`
 
-### Installation
+### Installation & Local Development
 
-1.  **Clone the repository:**
-    ```bash
-    git clone https://github.com/your-username/your-repo-name.git
-    cd your-repo-name
-    ```
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/PratikPawar020403/psp-portfolio.git
+   cd psp-portfolio
+   ```
 
-2.  **Install dependencies:**
-    ```bash
-    npm install
-    ```
+2. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
-3.  **Set up Environment Variables:**
-    Create a `.env` file in the root directory and add your Supabase keys:
-    ```env
-    VITE_SUPABASE_URL=your_supabase_url
-    VITE_SUPABASE_PUBLISHABLE_KEY=your_supabase_key
-    ```
+3. **Environment Variables (Optional — falls back to public read-only Supabase config):**
+   Copy `.env.example` to `.env` if overriding the Supabase project:
+   ```bash
+   cp .env.example .env
+   ```
+   ```env
+   VITE_SUPABASE_URL=https://your-project-id.supabase.co
+   VITE_SUPABASE_PUBLISHABLE_KEY=your-supabase-anon-or-publishable-key
+   ```
 
-4.  **Run locally:**
-    ```bash
-    npm run dev
-    ```
-    Open `http://localhost:5173` (or the port shown) in your browser.
+4. **Start the development server:**
+   ```bash
+   npm run dev
+   ```
+   Open [http://localhost:8080](http://localhost:8080) in your browser.
+   - Add `?intro` to force-play the PSP intro animation (`http://localhost:8080/?intro`).
+   - Add `?toast` to force-show the `TIPS.TXT` terminal keyboard toast (`http://localhost:8080/?toast`).
 
-## 📦 Build & Deployment
+## Available Scripts
 
-To build the project for production:
+| Command | Description |
+| :--- | :--- |
+| `npm run dev` | Start Vite dev server on `http://localhost:8080` |
+| `npm run build` | Build production bundle into `dist/` |
+| `npm run preview` | Serve the production `dist/` build locally |
+| `npm run lint` | Run ESLint across the codebase |
+| `npm run typecheck` | Run TypeScript compiler check (`tsc --noEmit`) |
 
-```bash
-npm run build
-```
+## Deployment (Netlify)
 
-The output will be in the `dist` folder.
-
-### Deploying to Netlify
-
-This project is configured for **Netlify**.
-
-1.  Connect your GitHub repository to Netlify.
-2.  **Build Settings** (Automatic via `netlify.toml`):
-    - **Command**: `npm run build`
-    - **Publish directory**: `dist`
-3.  Add your **Environment Variables** in Netlify Site Settings.
+- **Build command**: `npm run build`
+- **Publish directory**: `dist`
+- **Routing & Headers**: Automatically configured via `public/_redirects` (SPA history fallback) and `public/_headers` (immutable asset caching and security headers).
