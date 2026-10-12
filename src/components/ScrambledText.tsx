@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, forwardRef, useImperativeHandle } from "react";
+import React, { useCallback, useEffect, useRef, forwardRef, useImperativeHandle } from "react";
 
 export interface ScrambledTextHandle {
   trigger: () => void;
@@ -26,7 +26,7 @@ const ScrambledText = forwardRef<ScrambledTextHandle, ScrambledTextProps>(({
   const lastTriggerTime = useRef(0);
   const originalText = children;
 
-  const scrambleText = () => {
+  const scrambleText = useCallback(() => {
     if (!textRef.current) return;
 
     // Respect reduced motion
@@ -74,7 +74,7 @@ const ScrambledText = forwardRef<ScrambledTextHandle, ScrambledTextProps>(({
 
       iterations += step;
     }, 50);
-  };
+  }, [duration, originalText, scrambleChars]);
 
   const handleInteraction = () => {
     const now = Date.now();
@@ -86,14 +86,14 @@ const ScrambledText = forwardRef<ScrambledTextHandle, ScrambledTextProps>(({
   // Expose trigger method via ref
   useImperativeHandle(ref, () => ({
     trigger: scrambleText
-  }));
+  }), [scrambleText]);
 
   useEffect(() => {
     if (triggerOnMount) {
       const timer = setTimeout(scrambleText, 500);
       return () => clearTimeout(timer);
     }
-  }, [triggerOnMount]);
+  }, [triggerOnMount, scrambleText]);
 
   // Cleanup on unmount
   useEffect(() => {

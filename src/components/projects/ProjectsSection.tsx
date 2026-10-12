@@ -316,7 +316,6 @@ export const ProjectsSection = () => {
       try {
         const fetched = await fetchProjects();
         if (isMounted && fetched && fetched.length > 0) {
-          console.log("Supabase projects loaded:", fetched.length);
           setProjectsData(fetched);
         }
       } catch (err) {

@@ -1,11 +1,10 @@
 import type { Config } from "tailwindcss";
+import tailwindcssAnimate from "tailwindcss-animate";
 
 export default {
   darkMode: ["class"],
   content: [
-    "./pages/**/*.{ts,tsx}",
-    "./components/**/*.{ts,tsx}",
-    "./app/**/*.{ts,tsx}",
+    "./index.html",
     "./src/**/*.{ts,tsx}",
   ],
   prefix: "",
@@ -65,29 +64,12 @@ export default {
         // Active fonts (used in codebase)
         'inter': ['Inter', 'sans-serif'],
         'space-grotesk': ['Space Grotesk', 'sans-serif'],
-        'poppins': ['Poppins', 'sans-serif'],
-        'nunito': ['Nunito', 'sans-serif'],
         'press-start': ['"Press Start 2P"', 'cursive'],
         'vt323': ['VT323', 'monospace'],
         'trebuchet': ['Trebuchet MS', 'sans-serif'],
         'fraunces': ['Fraunces', 'Georgia', 'serif'],
-        // Brand logo font (प्रतिक)
-        'sarpanch': ['Sarpanch', 'sans-serif'],
-      },
-      animation: {
-        aurora: "aurora 60s linear infinite",
-      },
-      keyframes: {
-        aurora: {
-          from: {
-            backgroundPosition: "50% 50%, 50% 50%",
-          },
-          to: {
-            backgroundPosition: "350% 50%, 350% 50%",
-          },
-        },
       },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [tailwindcssAnimate],
 } satisfies Config;

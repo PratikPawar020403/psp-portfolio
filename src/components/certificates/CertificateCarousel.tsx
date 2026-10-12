@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { CarouselSlide } from './CarouselSlide';
 import { Certificate } from '@/types/certificate';
-import { cn } from '@/lib/utils';
 
 interface CertificateCarouselProps {
   certificates: Certificate[];
 }
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const defaultCertificates: Certificate[] = [
   { id: 1, title: 'Generative AI Mastermind', issuer: 'Outskill', date: '2024', color: 'from-blue-500 to-cyan-500', image: '/psp-uploads/008decb4-a10b-4a52-9df3-7329f72406dd.png' },
   { id: 2, title: 'Deep Learning Specialization', issuer: 'DeepLearning.AI', date: '2024', color: 'from-purple-500 to-indigo-500', image: '/psp-uploads/21f29b71-eb78-4c51-90a0-a9dcdffabd4b.png' },
