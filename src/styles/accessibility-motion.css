@@ -12,23 +12,8 @@
     scroll-behavior: auto !important;
   }
   
-  .parallax-layer {
-    transform: none !important;
-  }
-  
   /* Disable carousel autoplay for users who prefer reduced motion */
   [aria-roledescription="carousel"] {
     scroll-behavior: auto !important;
   }
-}
-
-/* Specific Timeline fixes */
-.tooltip-scroll-wrapper {
-  scroll-snap-type: x mandatory;
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.tooltip-scroll-wrapper::-webkit-scrollbar {
-  display: none;
 }

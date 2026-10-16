@@ -2,7 +2,6 @@
 import { supabase } from "@/integrations/supabase/client";
 import { Certificate } from "@/types/certificate";
 import { Project, ProjectSize } from "@/types/project";
-import { Database } from '@/integrations/supabase/types';
 
 // Helper function to normalize and optimize URLs
 function normalizeUrl(url: string | null | undefined): string | undefined {

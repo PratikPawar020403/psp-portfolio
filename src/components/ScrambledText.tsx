@@ -22,7 +22,7 @@ const ScrambledText = forwardRef<ScrambledTextHandle, ScrambledTextProps>(({
   triggerOnMount = true,
 }, ref) => {
   const textRef = useRef<HTMLSpanElement>(null);
-  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const rafRef = useRef<number | null>(null);
   const lastTriggerTime = useRef(0);
   const originalText = children;
 
@@ -36,49 +36,51 @@ const ScrambledText = forwardRef<ScrambledTextHandle, ScrambledTextProps>(({
       return;
     }
 
-    // Clear any existing animation
-    if (intervalRef.current) {
-      clearInterval(intervalRef.current);
+    // Clear any existing animation frame
+    if (rafRef.current !== null) {
+      cancelAnimationFrame(rafRef.current);
+      rafRef.current = null;
     }
 
     const element = textRef.current;
+    const totalDurationMs = Math.max(200, (duration || 1.5) * 1000);
+    const startTime = performance.now();
+    const charsLen = scrambleChars.length;
+    const textLen = originalText.length;
 
-    // START with original text to ensure LCP is instantly readable by browser
-    element.innerText = originalText;
+    const frame = (now: number) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(1, elapsed / totalDurationMs);
+      const revealedCount = Math.floor(progress * textLen);
 
-    // Then optionally start scrambling if not reduced motion
-    // ... logic continues below for animation loop ... 
-
-    let iterations = 0;
-    const totalTicks = duration > 0 ? (duration * 1000) / 50 : originalText.length * 3;
-    const step = originalText.length / Math.max(1, totalTicks);
-
-    intervalRef.current = setInterval(() => {
-      element.innerText = originalText
-        .split('')
-        .map((char, index) => {
-          if (char === ' ') return ' ';
-          if (index < iterations) {
-            return originalText[index];
-          }
-          return scrambleChars[Math.floor(Math.random() * scrambleChars.length)];
-        })
-        .join('');
-
-      if (iterations >= originalText.length) {
-        if (intervalRef.current) {
-          clearInterval(intervalRef.current);
-          intervalRef.current = null;
+      let output = "";
+      for (let i = 0; i < textLen; i++) {
+        const char = originalText[i];
+        if (char === " ") {
+          output += " ";
+        } else if (i < revealedCount) {
+          output += char;
+        } else {
+          output += scrambleChars[Math.floor(Math.random() * charsLen)];
         }
       }
 
-      iterations += step;
-    }, 50);
+      element.innerText = output;
+
+      if (progress < 1) {
+        rafRef.current = requestAnimationFrame(frame);
+      } else {
+        element.innerText = originalText;
+        rafRef.current = null;
+      }
+    };
+
+    rafRef.current = requestAnimationFrame(frame);
   }, [duration, originalText, scrambleChars]);
 
   const handleInteraction = () => {
     const now = Date.now();
-    if (now - lastTriggerTime.current < 500) return; // 500ms debounce
+    if (now - lastTriggerTime.current < 400) return; // 400ms debounce
     lastTriggerTime.current = now;
     scrambleText();
   };
@@ -90,7 +92,7 @@ const ScrambledText = forwardRef<ScrambledTextHandle, ScrambledTextProps>(({
 
   useEffect(() => {
     if (triggerOnMount) {
-      const timer = setTimeout(scrambleText, 500);
+      const timer = setTimeout(scrambleText, 300);
       return () => clearTimeout(timer);
     }
   }, [triggerOnMount, scrambleText]);
@@ -98,8 +100,8 @@ const ScrambledText = forwardRef<ScrambledTextHandle, ScrambledTextProps>(({
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      if (intervalRef.current) {
-        clearInterval(intervalRef.current);
+      if (rafRef.current !== null) {
+        cancelAnimationFrame(rafRef.current);
       }
     };
   }, []);

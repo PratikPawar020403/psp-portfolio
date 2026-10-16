@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 
 export const LoadingFallback = () => {
   const location = useLocation();
-  const path = location.hash.slice(1) || 'hero';
+  const path = location.hash.slice(1) || 'web1';
 
   return (
     <SectionSkeleton 

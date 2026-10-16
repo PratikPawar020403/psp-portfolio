@@ -455,7 +455,31 @@ export default function FaultyTerminal({
     resizeObserver.observe(ctn);
     resize();
 
+    let isIntersecting = true;
+    let isPageVisible = !document.hidden;
+    let isIntroActive =
+      typeof document !== "undefined" &&
+      document.documentElement.classList.contains("psp-intro-active");
+    let isRunning = false;
+    const prefersReducedMotion =
+      typeof window !== "undefined" &&
+      window.matchMedia &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    const startAnimation = () => {
+      if (isRunning || !isIntersecting || !isPageVisible || isIntroActive || prefersReducedMotion) return;
+      isRunning = true;
+      rafRef.current = requestAnimationFrame(update);
+    };
+
+    const stopAnimation = () => {
+      if (!isRunning) return;
+      isRunning = false;
+      cancelAnimationFrame(rafRef.current);
+    };
+
     const update = (t: number) => {
+      if (!isRunning) return;
       rafRef.current = requestAnimationFrame(update);
 
       if (pageLoadAnimation && loadAnimationStartRef.current === 0) {
@@ -502,7 +526,43 @@ export default function FaultyTerminal({
 
       renderer.render({ scene: mesh });
     };
-    rafRef.current = requestAnimationFrame(update);
+
+    // Render one initial frame immediately
+    renderer.render({ scene: mesh });
+    startAnimation();
+
+    const intersectionObserver = new IntersectionObserver(
+      ([entry]) => {
+        isIntersecting = entry.isIntersecting;
+        if (isIntersecting && isPageVisible) {
+          startAnimation();
+        } else {
+          stopAnimation();
+        }
+      },
+      { threshold: 0.02 }
+    );
+    intersectionObserver.observe(ctn);
+
+    const handleVisibilityChange = () => {
+      isPageVisible = !document.hidden;
+      if (isIntersecting && isPageVisible) {
+        startAnimation();
+      } else {
+        stopAnimation();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    const handleIntroEnd = () => {
+      isIntroActive = false;
+      if (isIntersecting && isPageVisible) {
+        startAnimation();
+      }
+    };
+    window.addEventListener("psp:reveal", handleIntroEnd);
+    window.addEventListener("psp:done", handleIntroEnd);
+
     ctn.appendChild(gl.canvas);
 
     if (mouseReact) window.addEventListener("mousemove", handleMouseMove, { passive: true });
@@ -511,7 +571,11 @@ export default function FaultyTerminal({
     }
 
     return () => {
-      cancelAnimationFrame(rafRef.current);
+      stopAnimation();
+      intersectionObserver.disconnect();
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+      window.removeEventListener("psp:reveal", handleIntroEnd);
+      window.removeEventListener("psp:done", handleIntroEnd);
       resizeObserver.disconnect();
       if (mouseReact) window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("pointerdown", handlePointerDown);

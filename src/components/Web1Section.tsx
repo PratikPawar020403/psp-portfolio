@@ -1,6 +1,5 @@
 import React, { useEffect, useState, useRef, Suspense } from 'react';
 import { Monitor, Save, Mail } from 'lucide-react';
-// import FaultyTerminal from './FaultyTerminal'; // DIRECT IMPORT REMOVED FOR PERF
 import ScrambledText, { ScrambledTextHandle } from './ScrambledText';
 
 import { useIsMobile } from '@/hooks/use-mobile'; // Import hook
@@ -17,82 +16,64 @@ const Web1Section = () => {
   // Refs for animation control
   const scrambledTextRef1 = useRef<ScrambledTextHandle>(null);
   const scrambledTextRef2 = useRef<ScrambledTextHandle>(null);
-  const animationContainerRef = useRef<HTMLDivElement>(null);
 
   const hasAnimatedRef = useRef(false);
   const [showTerminal, setShowTerminal] = useState(false);
 
-  // Defer heavy WebGL FaultyTerminal rendering until the PSP portal opens (psp:reveal)
-  // so the 7-second bounce runs at a locked 60fps with zero main-thread/GPU contention.
+  // Activate FaultyTerminal background as soon as home screen is revealed
   useEffect(() => {
-    // Preload the chunk during the bounce (cheap network fetch, no WebGL execution yet)
     import('./FaultyTerminal').catch(() => {});
 
-    let idleHandle: number | null = null;
-    let timerHandle: ReturnType<typeof setTimeout> | null = null;
-
-    const scheduleTerminal = () => {
-      if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
-        idleHandle = (window as unknown as { requestIdleCallback: (cb: () => void, opts?: { timeout: number }) => number }).requestIdleCallback(
-          () => setShowTerminal(true),
-          { timeout: 1000 }
-        );
-      } else {
-        timerHandle = setTimeout(() => setShowTerminal(true), 200);
-      }
+    let timer: ReturnType<typeof setTimeout> | null = null;
+    const activateTerminal = () => {
+      // Defer slightly (250ms) to allow hero text scramble animation to initiate cleanly without main-thread contention
+      timer = setTimeout(() => {
+        setShowTerminal(true);
+      }, 250);
     };
 
     const html = document.documentElement;
     if (html.classList.contains('psp-reveal') || !html.classList.contains('psp-intro-active')) {
-      scheduleTerminal();
+      activateTerminal();
     } else {
-      window.addEventListener('psp:reveal', scheduleTerminal, { once: true });
+      window.addEventListener('psp:reveal', activateTerminal, { once: true });
     }
 
     return () => {
-      window.removeEventListener('psp:reveal', scheduleTerminal);
-      if (idleHandle !== null && 'cancelIdleCallback' in window) {
-        (window as unknown as { cancelIdleCallback: (h: number) => void }).cancelIdleCallback(idleHandle);
-      }
-      if (timerHandle !== null) {
-        clearTimeout(timerHandle);
-      }
+      window.removeEventListener('psp:reveal', activateTerminal);
+      if (timer !== null) clearTimeout(timer);
     };
   }, []);
 
-  // Trigger hero ScrambledText animations when the PSP portal opens (or immediately on refresh if intro skipped)
+  // Trigger hero ScrambledText animations immediately as the home screen appears
   useEffect(() => {
-    let firstTimer: ReturnType<typeof setTimeout> | null = null;
     let secondTimer: ReturnType<typeof setTimeout> | null = null;
+    let initialMountTimer: ReturnType<typeof setTimeout> | null = null;
 
     const startHeroEntrance = () => {
       if (hasAnimatedRef.current) return;
       hasAnimatedRef.current = true;
 
-      firstTimer = setTimeout(() => {
-        scrambledTextRef1.current?.trigger();
-      }, 400);
+      // Trigger main title immediately
+      scrambledTextRef1.current?.trigger();
 
+      // Trigger subtitle with crisp 100ms offset
       secondTimer = setTimeout(() => {
         scrambledTextRef2.current?.trigger();
-      }, 800);
+      }, 100);
     };
 
     const html = document.documentElement;
     if (html.classList.contains('psp-reveal') || !html.classList.contains('psp-intro-active')) {
-      startHeroEntrance();
+      initialMountTimer = setTimeout(startHeroEntrance, 20);
     } else {
       window.addEventListener('psp:reveal', startHeroEntrance, { once: true });
     }
 
     return () => {
       window.removeEventListener('psp:reveal', startHeroEntrance);
-      if (firstTimer !== null) {
-        clearTimeout(firstTimer);
-      }
-      if (secondTimer !== null) {
-        clearTimeout(secondTimer);
-      }
+      if (secondTimer !== null) clearTimeout(secondTimer);
+      if (initialMountTimer !== null) clearTimeout(initialMountTimer);
     };
   }, []);
 
@@ -141,10 +122,7 @@ const Web1Section = () => {
 
       {/* Main Content Container */}
       <div className="container max-w-4xl relative z-20">
-        <div
-          ref={animationContainerRef}
-          className="clean-card bg-black/5 backdrop-blur-sm border-4 border-[#39FF14]/30 shadow-[0_0_20px_rgba(57,255,20,0.3)] relative"
-        >
+        <div className="clean-card bg-black/5 backdrop-blur-sm border-4 border-[#39FF14]/30 shadow-[0_0_20px_rgba(57,255,20,0.3)] relative">
 
           {/* Title Bar */}
           <div className="flex items-center gap-4 border-b-4 border-[#39FF14]/50 pb-4 mb-8">
@@ -158,8 +136,8 @@ const Web1Section = () => {
           <h1 className="font-press-start text-[#39FF14] tracking-wider uppercase shadow-[0_0_10px_rgba(57,255,20,0.5)] text-center mb-8 text-2xl md:text-3xl lg:text-4xl">
             <ScrambledText
               ref={scrambledTextRef1}
-              duration={2}
-              scrambleChars="!@#$%^&*()_+-=[]{}|;:,.<>?"
+              duration={2.5}
+              scrambleChars="!@#$%^&*()_+-=[]{}|;:,.<>?/~"
               triggerOnMount={false}
             >
               Welcome to My Portfolio
@@ -178,7 +156,7 @@ const Web1Section = () => {
             <p className="font-normal text-2xl">
               <ScrambledText
                 ref={scrambledTextRef2}
-                duration={10}
+                duration={5}
                 scrambleChars=".:|"
                 triggerOnMount={false}
               >
@@ -186,11 +164,6 @@ const Web1Section = () => {
               </ScrambledText>
               <span className="inline-block w-3 h-6 bg-[#39FF14] animate-blink ml-2">_</span>
             </p>
-          </div>
-
-          {/* Terminal Box - Enhanced Interactive Display */}
-          <div className="mb-8">
-
           </div>
 
           {/* Decorative Element */}

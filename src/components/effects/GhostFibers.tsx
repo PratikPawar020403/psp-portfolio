@@ -286,6 +286,9 @@ const GhostFibers: FC<GhostFibersProps> = ({
     let isPaused = false;
     let isVisible = true;
     let isPageVisible = !document.hidden;
+    let isIntroActive =
+      typeof document !== 'undefined' &&
+      document.documentElement.classList.contains('psp-intro-active');
     const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
     const render = () => renderer.render({ scene: mesh });
@@ -293,7 +296,7 @@ const GhostFibers: FC<GhostFibersProps> = ({
       if (frameId !== 0) cancelAnimationFrame(frameId);
       frameId = 0;
     };
-    const canAnimate = () => isVisible && isPageVisible && !isPaused && !reducedMotion.matches;
+    const canAnimate = () => isVisible && isPageVisible && !isPaused && !isIntroActive && !reducedMotion.matches;
 
     const loop = (now: number) => {
       frameId = 0;
@@ -353,6 +356,13 @@ const GhostFibers: FC<GhostFibersProps> = ({
     document.addEventListener('visibilitychange', handleVisibility);
     reducedMotion.addEventListener('change', handleReducedMotion);
 
+    const handleIntroEnd = () => {
+      isIntroActive = false;
+      if (canAnimate()) start();
+    };
+    window.addEventListener('psp:reveal', handleIntroEnd);
+    window.addEventListener('psp:done', handleIntroEnd);
+
     contexts.set(container, {
       renderer,
       program,
@@ -380,6 +390,8 @@ const GhostFibers: FC<GhostFibersProps> = ({
       intersectionObserver.disconnect();
       document.removeEventListener('visibilitychange', handleVisibility);
       reducedMotion.removeEventListener('change', handleReducedMotion);
+      window.removeEventListener('psp:reveal', handleIntroEnd);
+      window.removeEventListener('psp:done', handleIntroEnd);
       contexts.delete(container);
       if (canvas.parentNode === container) container.removeChild(canvas);
       gl.getExtension('WEBGL_lose_context')?.loseContext();

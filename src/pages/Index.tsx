@@ -1,4 +1,3 @@
-// ... (imports)
 import React, { Suspense, useEffect } from 'react';
 import { ErrorBoundary } from '@/components/ErrorBoundary';
 import { LoadingFallback } from '@/components/LoadingFallback';
@@ -20,6 +19,8 @@ const Web1Section = React.lazy(() =>
 );
 
 
+import NotebookSection from '@/components/NotebookSection';
+
 const ProjectsSection = React.lazy(() =>
   import('@/components/projects/ProjectsSection').catch(() => {
     toast.error('Failed to load Projects section');
@@ -30,13 +31,6 @@ const ProjectsSection = React.lazy(() =>
 const SkillPowerUpsSection = React.lazy(() =>
   import('@/components/SkillPowerUpsSection').catch(() => {
     toast.error('Failed to load Skill Power-ups section');
-    return { default: () => null };
-  })
-);
-
-const NotebookSection = React.lazy(() =>
-  import('@/components/NotebookSection').catch(() => {
-    toast.error('Failed to load Notebook section');
     return { default: () => null };
   })
 );
@@ -74,6 +68,30 @@ const Index = () => {
     };
   }, []);
 
+  const [mountBelowFold, setMountBelowFold] = React.useState(() => {
+    if (typeof document === 'undefined') return true;
+    return !document.documentElement.classList.contains('psp-intro-active');
+  });
+
+  useEffect(() => {
+    if (mountBelowFold) return;
+    const enableBelowFold = () => setMountBelowFold(true);
+    window.addEventListener('psp:reveal', enableBelowFold, { once: true });
+    window.addEventListener('psp:done', enableBelowFold, { once: true });
+    window.addEventListener('scroll', enableBelowFold, { once: true, passive: true });
+    window.addEventListener('wheel', enableBelowFold, { once: true, passive: true });
+    window.addEventListener('touchstart', enableBelowFold, { once: true, passive: true });
+    const timer = setTimeout(enableBelowFold, 3000);
+    return () => {
+      window.removeEventListener('psp:reveal', enableBelowFold);
+      window.removeEventListener('psp:done', enableBelowFold);
+      window.removeEventListener('scroll', enableBelowFold);
+      window.removeEventListener('wheel', enableBelowFold);
+      window.removeEventListener('touchstart', enableBelowFold);
+      clearTimeout(timer);
+    };
+  }, [mountBelowFold]);
+
   return (
     <main id="main-content" className="relative" role="main" aria-label="Portfolio Content">
       <ScrollProgress aria-label="Page scroll progress" />
@@ -92,7 +110,7 @@ const Index = () => {
       </ScrollReveal>
 
       {/* Notebook Section */}
-      <ScrollReveal>
+      <ScrollReveal disabled>
         <section id="notebook" aria-label="Academic Notebook" role="region" className="snap-section">
           <ErrorBoundary>
             <Suspense fallback={<LoadingFallback />}>
@@ -107,7 +125,7 @@ const Index = () => {
         <section id="projects" aria-label="Project Showcase" role="region" className="snap-section bg-[#101010]">
           <ErrorBoundary>
             <Suspense fallback={<LoadingFallback />}>
-              <ProjectsSection />
+              {mountBelowFold ? <ProjectsSection /> : <LoadingFallback />}
             </Suspense>
           </ErrorBoundary>
         </section>
@@ -118,7 +136,7 @@ const Index = () => {
         <section id="skillpowerups" aria-label="Skill Certifications" role="region" className="snap-section bg-[#ecebe4]">
           <ErrorBoundary>
             <Suspense fallback={<LoadingFallback />}>
-              <SkillPowerUpsSection />
+              {mountBelowFold ? <SkillPowerUpsSection /> : <LoadingFallback />}
             </Suspense>
           </ErrorBoundary>
         </section>
@@ -138,7 +156,7 @@ const Index = () => {
       {/* Footer */}
       <ErrorBoundary>
         <Suspense fallback={<LoadingFallback />}>
-          <Footer />
+          {mountBelowFold ? <Footer /> : null}
         </Suspense>
       </ErrorBoundary>
 

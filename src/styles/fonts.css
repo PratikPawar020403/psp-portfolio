@@ -17,10 +17,45 @@
   font-family: 'VT323', monospace;
 }
 
-.font-trebuchet {
-  font-family: 'Trebuchet MS', sans-serif;
+.font-cormorant-garamond {
+  font-family: 'Cormorant Garamond', 'Cormorant', Garamond, Georgia, serif;
+  font-optical-sizing: auto;
 }
 
-.font-fraunces {
-  font-family: 'Fraunces', 'Georgia', serif;
+.font-cormorant {
+  font-family: 'Cormorant', 'Cormorant Garamond', serif;
+  font-optical-sizing: auto;
+}
+
+.font-cormorant-light-italic {
+  font-family: 'Cormorant', serif;
+  font-optical-sizing: auto;
+  font-weight: 300;
+  font-style: italic;
+}
+
+.font-syne {
+  font-family: 'Syne', sans-serif;
+  font-optical-sizing: auto;
+}
+
+.font-syne-extrabold {
+  font-family: 'Syne', sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 800;
+  font-style: normal;
+}
+
+.font-syne-semibold {
+  font-family: 'Syne', sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 600;
+  font-style: normal;
+}
+
+.font-syne-bold {
+  font-family: 'Syne', sans-serif;
+  font-optical-sizing: auto;
+  font-weight: 700;
+  font-style: normal;
 }

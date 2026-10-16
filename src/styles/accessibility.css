@@ -33,23 +33,3 @@
   }
 }
 
-/* Skip to content link for keyboard users */
-.skip-to-content {
-  position: absolute;
-  left: -9999px;
-  top: 0;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  z-index: 9999;
-}
-
-.skip-to-content:focus {
-  left: 0;
-  width: auto;
-  height: auto;
-  padding: 1rem;
-  background: white;
-  color: black;
-  font-weight: bold;
-}

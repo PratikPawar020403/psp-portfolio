@@ -14,11 +14,11 @@ interface ScrollRevealProps {
 export const ScrollReveal: React.FC<ScrollRevealProps> = ({
   children,
   className = '',
-  threshold = 0.1,
+  threshold = 0.02,
   delay = 0,
   stagger = false,
   disabled = false,
-  rootMargin = '0px 0px -10% 0px',
+  rootMargin = '0px 0px -30px 0px',
 }) => {
   const ref = useRef<HTMLDivElement>(null);
   
@@ -28,16 +28,30 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = ({
     const element = ref.current;
     if (!element) return;
     
+    const prefersReduced = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReduced) {
+      element.classList.add(stagger ? 'active' : 'visible');
+      return;
+    }
+    
     const observerCallback: IntersectionObserverCallback = (entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
-          setTimeout(() => {
+          if (delay > 0) {
+            setTimeout(() => {
+              if (stagger) {
+                element.classList.add('active');
+              } else {
+                element.classList.add('visible');
+              }
+            }, delay);
+          } else {
             if (stagger) {
               element.classList.add('active');
             } else {
               element.classList.add('visible');
             }
-          }, delay);
+          }
           observer.unobserve(element);
         }
       });

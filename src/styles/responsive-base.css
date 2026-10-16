@@ -162,12 +162,6 @@ p {
 }
 
 /* 10. Clean UI - Remove Clutter */
-.clean-section {
-  padding: clamp(2rem, 5vw, 4rem) 0;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
 .clean-card {
   background: white;
   border-radius: 12px;

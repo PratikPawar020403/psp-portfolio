@@ -38,9 +38,6 @@
   }
   
   /* Adjust vertical spacing */
-  .snap-section + .snap-section {
-    margin-top: -10vh;
-  }
 }
 
 /* Desktop and larger screens */

@@ -24,11 +24,6 @@
 
 /* Optimize animations for high-performance devices */
 @media (min-width: 1025px) and (min-device-pixel-ratio: 2) {
-  .parallax-layer {
-    transition-property: transform;
-    transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
-  }
-  
   .stagger-reveal > * {
     transition: opacity 0.7s cubic-bezier(0.2, 0, 0, 1), 
                 transform 0.7s cubic-bezier(0.2, 0, 0, 1);
